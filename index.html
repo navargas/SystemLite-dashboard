@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<!--
+   "If you remember the shape of your spoon at lunch,
+            it has to be the wrong shape."
+                                 -Adrian Frutiger
+-->
+
+<html>
+  <head>
+    <title>SystemLite</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/tabbar.css">
+    <link rel="stylesheet" href="css/jquery.contextMenu.css">
+  </head>
+  <body>
+    <div class="sl-page">
+      <div class="sl-item header">
+        System Lite - Cloud Data Services SRE
+      </div>
+      <div class="sl-item body" id="slbody">
+        <!-- TABS -->
+        <ul class="tab-box" id="components">
+          <li v-for="component in compList"
+              v-on:click="tabClick($index, $event)"
+              v-bind:class="{ 'tab-selected': component.selected }"
+              v-cloak>
+            <div class="tab-item">
+              <!-- This data binding is one directional. I think that is ok because it
+              prevents the user from creating an unvalidating in-between state while
+              they are in the process of editing the element -->
+              <span class="tab-name" data-tagitem="true">{{ component.name }}</span>
+              <span class="tab-delete" v-on:click="deleteTab($index)"></span>
+            </div>
+          </li>
+          <li v-on:click="newTab()" id="new-tab">
+            <div class="tab-item">+</div>
+          </li>
+        </ul>
+      </div>
+      <div class="sl-item footer">
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.11/vue.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="js/main.js"></script>
+  </body>
+</html>

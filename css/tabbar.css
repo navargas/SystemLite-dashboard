@@ -1,0 +1,58 @@
+
+.tab-delete:before {
+  content: '\00D7';
+  color:grey;
+  padding-left: 3px;
+}
+
+.tab-box {
+  list-style-type: none;
+  height: 2em;
+  width: 100%;
+  display: block;
+  margin:0em;
+  padding: 10px 0px 0px 0px;
+  border-color: grey;
+  border-bottom: solid;
+  border-width: 1px;
+  background-color: #f5f5f5;
+}
+
+.tab-box li {
+  float: left;
+  display: inline-block;
+  height: 100%;
+  padding: 0px 10px;
+  border-right: solid;
+  border-color: grey;
+  border-bottom: solid;
+  border-width: 1px;
+  border-radius: 4px 4px 0px 0px;
+  background-color: #EAEAEA;
+}
+
+.tab-box li:hover:not(.tab-selected) {
+  background-color: #f0f0f0;
+}
+
+.tab-box li:first-child {
+  margin-left:1em;
+  border-left:solid;
+  border-width:1px;
+  border-radius: 4px 4px 0px 0px;
+}
+
+.tab-box .tab-item {
+  padding-top: .4em;
+  color:black;
+}
+.tab-box .tab-selected {
+  border-bottom-color: white;
+  background-color: white;
+}
+#new-tab {
+  /*background-color: white;*/
+}
+#new-tab .tab-item {
+  color: green;
+}

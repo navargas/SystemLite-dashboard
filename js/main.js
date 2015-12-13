@@ -28,7 +28,6 @@ function nextAvailableName(complist) {
   for (elem in complist) {
     var regTest = format.exec(complist[elem].name);
     if (regTest) {
-      console.log('got', regTest[1]);
       max = parseInt(regTest[1]) > max ? parseInt(regTest[1]) : max;
     }
   }
@@ -46,13 +45,14 @@ function makeTabTitleEditable(element) {
   // when focus is lost of "enter" is pressed the user is prompted
   // to confirm that the name should be changed
   var stopEdit = function(elem) {
-    console.log('stopEdit', elem);
     // This function is called when the title span loses focus or
     // when"enter" is pressed
     elem.contentEditable = false;
     // Disable callbacks
     elem.onblur = function() {};
     elem.onkeypress = function() {};
+    // Ensure that the text has changed
+    if (elem.innerText == elem.dataset.oldName) return;
     if (confirm('Are you sure you wish to change the name of \"' +
                 elem.dataset.oldName + '\" to \"' + elem.innerText + '\"')) {
       componentByName(componentList, elem.dataset.oldName).name = elem.innerText;
@@ -65,7 +65,6 @@ function makeTabTitleEditable(element) {
     stopEdit(element);
   };
   element.onkeypress = function(e) {
-    console.log(e.which);
     if (e.which == 32) return false;
     if (e.which == 13) {
       // Enter key
@@ -101,7 +100,6 @@ var vm = new Vue({
       return false;
     },
     newTab: function() {
-      console.log('new tab');
       componentList.push(
         {name:nextAvailableName(componentList), selected:false}
       );

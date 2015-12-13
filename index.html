@@ -25,7 +25,7 @@
               v-cloak>
             <div class="tab-item">
               <!-- This data binding is one directional. I think that is ok because it
-              prevents the user from creating an unvalidating in-between state while
+              prevents the user from creating an unvalidated in-between state while
               they are in the process of editing the element -->
               <span class="tab-name" data-tagitem="true">{{ component.name }}</span>
               <span class="tab-delete" v-on:click="deleteTab($index)"></span>
@@ -40,6 +40,6 @@
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.11/vue.js"></script>
-    <script src="js/main.js"></script>
+    <script src="js/tabs.js"></script>
   </body>
 </html>

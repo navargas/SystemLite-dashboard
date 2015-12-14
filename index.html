@@ -40,15 +40,12 @@
       </div>
       <div class="sl-item body">
         <!-- SVG Board -->
-        <svg width="5000" height="5000" id=:svgCanvas">
+        <svg width="5000" height="5000" id="svgCanvas">
           <g v-bind:style="scaleFactor" style="transform:scale(1)">
             <g v-for="item in circles">
               <circle v-on:mousedown="dragStart($event, $index)"
-                      v-on:mouseup="dragStop($event, $index)"
-                      v-on:drag="drag($event, $index)"
                       data-type="circles"
                       class="outerElement"
-                      draggable="true"
                       :cx="item.x" :cy="item.y" :r="item.r" :stroke="item.style.outColor"
                       stroke-width="1" :fill="item.style.inColor" />
             </g>

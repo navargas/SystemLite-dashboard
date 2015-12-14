@@ -116,4 +116,4 @@ var vm = new Vue({
   data: {
     compList: componentList
   }
-})
+});

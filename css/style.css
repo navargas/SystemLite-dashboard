@@ -52,8 +52,17 @@ html, body {
   padding: .5em;
 }
 
+.sl-page .sl-item.tabs {
+  flex: 0 1 auto;
+  background-color: white;
+  margin-left: 0px;
+  margin-right: 0px;
+  /*color: black;*/
+}
+
 .sl-page .sl-item.body {
-  flex: 1 1 auto;
+  flex-grow: 1;
+  overflow:auto;
   border-bottom: solid;
   border-width: 1px;
   background-color: white;

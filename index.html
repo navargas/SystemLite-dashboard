@@ -20,12 +20,11 @@
       </div>
       <div class="sl-item tabs">
         <!-- TABS -->
-        <ul class="tab-box" id="components">
+        <ul class="tab-box" id="components" v-cloak>
           <li v-for="component in compList"
               v-on:click="tabClick($index, $event)"
-              v-bind:class="{ 'tab-selected': component.selected }"
-              v-cloak>
-            <div class="tab-item">
+              v-bind:class="{ 'tab-selected': component.selected }">
+            <div class="tab-item" v-cloak>
               <!-- This data binding is one directional. I think that is ok because it
               prevents the user from creating an unvalidated in-between state while
               they are in the process of editing the element -->
@@ -40,8 +39,8 @@
       </div>
       <div class="sl-item body">
         <!-- SVG Board -->
-        <svg width="5000" height="5000" id="svgCanvas">
-          <g v-bind:style="scaleFactor" style="transform:scale(1)">
+        <svg width="5000" height="5000" id="svgCanvas" v-on:mouseup="dragStop() "v-on:mousemove="mouseMove">
+          <g :transform="scaleFactorStyle">
             <g v-for="item in circles">
               <circle v-on:mousedown="dragStart($event, $index)"
                       data-type="circles"
@@ -60,7 +59,7 @@
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.11/vue.js"></script>
-    <script src="js/tabs.js"></script>
     <script src="js/svg.js"></script>
+    <script src="js/tabs.js"></script>
   </body>
 </html>

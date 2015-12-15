@@ -14,11 +14,16 @@ function currentlySelectedIndex(complist) {
   }
 }
 
+var switchTabEvent = document.createEvent('Event');
+switchTabEvent.initEvent("switchTab",true,true);
+
 function switchToTab(complist, index) {
   // Change currently displayed tab, accepts negative numbers
   for (elem in complist) {
     complist[elem].selected = (index == elem);
   }
+  switchTabEvent.index = index;
+  document.dispatchEvent(switchTabEvent);
 }
 
 function nextAvailableName(complist) {
@@ -98,7 +103,10 @@ var vm = new Vue({
       if (index == currentlySelectedIndex(componentList)) {
         activateNearbyTab(componentList, index);
       }
-      componentList.$remove(componentList[index]);
+      if (confirm('Are you sure you wish to delete \"' + componentList[index].name + '"')) {
+        componentList.$remove(componentList[index]);
+      } else {
+      }
       return false;
     },
     newTab: function() {

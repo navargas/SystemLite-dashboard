@@ -8,7 +8,7 @@ completeState = [
     {label:"Dashboard_1", x:130,  y:130, r:20, style:default2},
     {label:"Dashboard_2", x:130,  y:50, r:20, style:default2},
     {label:"Load_Balancer", x:70,  y:100, r:20, style:default4},
-    {label:"Redis_Cache", x:180,  y:100, r:10, style:default3}
+    {label:"Redis_Cache", x:190,  y:40, r:10, style:default3}
   ],
   paths: [
     {from: "Load_Balancer", to:"Dashboard_1"},
@@ -20,14 +20,12 @@ completeState = [
     {from: "Dashboard_1", to:"PostgreSQL"}
   ]},
   {circles: [
-    {label:"Obj1", x:50,  y:100, r:20, style:default1},
-    {label:"Obj1", x:100, y:100, r:20, style:default1},
-    {label:"Obj1", x:150, y:100, r:20, style:default1},
-    {label:"Obj1", x:50,  y:200, r:20, style:default2},
-    {label:"Obj1", x:100, y:200, r:20, style:default2},
-    {label:"Obj1", x:150, y:200, r:20, style:default2}
+    {label:"Watson_API", x:50,  y:100, r:20, style:default1},
+    {label:"RabittMQ", x:150, y:100, r:20, style:default2}
   ],
-  paths: []}
+  paths: [
+    {from: "Watson_API", to:"RabittMQ"}
+  ]}
 ];
 emptyState = {
   circles: [],

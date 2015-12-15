@@ -1,7 +1,7 @@
 default1 = {   inColor: "#2B754F",  outColor:"#043E21"   }
 default2 = {   inColor: "#8E345A",  outColor:"#4B0422"   }
 default3 = {   inColor: "#A67A3D",  outColor:"#583505"   }
-default4 = {   inColor: "#2B2E75",  outColor:"#282B6A"   }
+default4 = {   inColor: "#2B2E75",  outColor:"#131535"   }
 completeState = [
   {circles: [
     {label:"PostgreSQL", x:260, y:100, r:30, style:default1},
@@ -9,7 +9,7 @@ completeState = [
     {label:"Dashboard_2", x:130,  y:50, r:20, style:default2},
     {label:"Load_Balancer", x:70,  y:100, r:20, style:default4},
     {label:"Redis_Cache", x:180,  y:100, r:10, style:default3}
-  ]},
+  paths: []},
   {circles: [
     {label:"Obj1", x:50,  y:100, r:20, style:default1},
     {label:"Obj1", x:100, y:100, r:20, style:default1},
@@ -17,18 +17,18 @@ completeState = [
     {label:"Obj1", x:50,  y:200, r:20, style:default2},
     {label:"Obj1", x:100, y:200, r:20, style:default2},
     {label:"Obj1", x:150, y:200, r:20, style:default2}
-  ]}
+  ]
+  paths: []}
 ];
 emptyState = {
-  circles: []
+  circles: [],
+  paths: []
 };
 
 var svgCanvas = new Vue({
   el: '#svgCanvas',
   methods: {
     zoom: function(factor) {
-      //var format = /scale\(([-+]?[0-9]*\.?[0-9]*)\)/;
-      // i.e extract Number -3.2 from "scale(-3.2)"
       this.scaleFactor += factor;
     },
     mouseMove: function(event) {
@@ -44,6 +44,9 @@ var svgCanvas = new Vue({
     dragStart: function(event, index) {
       this.currentTarget = this.circles[index];
     },
+    dragStop: function(event, index) {
+      this.currentTarget = undefined;
+    },
     showTab: function(tab) {
       var onState = completeState[tab];
       if (!onState) {
@@ -51,8 +54,8 @@ var svgCanvas = new Vue({
       }
       this.circles = onState.circles;
     },
-    dragStop: function(event, index) {
-      this.currentTarget = undefined;
+    lineStart: function(event) {
+      console.log(event);
     }
   },
   data: {

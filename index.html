@@ -41,15 +41,23 @@
         <!-- SVG Board -->
         <svg width="5000" height="5000" id="svgCanvas" v-on:mouseup="dragStop() "v-on:mousemove="mouseMove">
           <g :transform="scaleFactorStyle">
+            <!-- Render Circles -->
             <g v-for="item in circles">
               <circle v-on:mousedown="dragStart($event, $index)"
                       data-type="circles"
                       class="outerElement"
                       :cx="item.x" :cy="item.y" :r="item.r" :stroke="item.style.outColor"
                       stroke-width="1" :fill="item.style.inColor" />
+              <rect :x="item.x+item.r" :y="item.y-2" rx="2" ry="2" width="2" height="2"
+                    class="lineNode" v-on:mousedown="lineStart" />
+              <rect :x="item.x-item.r-2" :y="item.y-1" rx="2" ry="2" width="2" height="2"
+                    class="lineNode" v-on:mousedown="lineStart" />
               <text text-anchor="middle" :x="item.x" :y="item.y-item.r-8" fill="black" font-size="8">
                 {{ item.label }}
               </text>
+            </g>
+            <!-- Render Paths -->
+            <g v-for="path in paths">
             </g>
           </g>
         </svg>

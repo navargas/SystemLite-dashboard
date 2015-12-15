@@ -18,3 +18,10 @@
   stroke-width: 3;
   opacity:0.5;
 }
+
+.connectingPath {
+  stroke-width: 2;
+  stroke: black;
+  stroke-linecap: round;
+  fill: none;
+}

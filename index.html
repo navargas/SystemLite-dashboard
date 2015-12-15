@@ -41,6 +41,10 @@
         <!-- SVG Board -->
         <svg width="5000" height="5000" id="svgCanvas" v-on:mouseup="dragStop() "v-on:mousemove="mouseMove">
           <g :transform="scaleFactorStyle">
+            <!-- Render Paths -->
+            <g v-for="path in paths">
+              <path class="connectingPath" :d="path">
+            </g>
             <!-- Render Circles -->
             <g v-for="item in circles">
               <circle v-on:mousedown="dragStart($event, $index)"
@@ -55,9 +59,6 @@
               <text text-anchor="middle" :x="item.x" :y="item.y-item.r-8" fill="black" font-size="8">
                 {{ item.label }}
               </text>
-            </g>
-            <!-- Render Paths -->
-            <g v-for="path in paths">
             </g>
           </g>
         </svg>

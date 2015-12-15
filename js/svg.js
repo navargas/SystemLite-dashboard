@@ -9,7 +9,16 @@ completeState = [
     {label:"Dashboard_2", x:130,  y:50, r:20, style:default2},
     {label:"Load_Balancer", x:70,  y:100, r:20, style:default4},
     {label:"Redis_Cache", x:180,  y:100, r:10, style:default3}
-  paths: []},
+  ],
+  paths: [
+    {from: "Load_Balancer", to:"Dashboard_1"},
+    {from: "Load_Balancer", to:"Dashboard_2"},
+    {from: "Redis_Cache", to:"PostgreSQL"},
+    {from: "Dashboard_2", to:"Redis_Cache"},
+    {from: "Dashboard_1", to:"Redis_Cache"},
+    {from: "Dashboard_2", to:"PostgreSQL"},
+    {from: "Dashboard_1", to:"PostgreSQL"}
+  ]},
   {circles: [
     {label:"Obj1", x:50,  y:100, r:20, style:default1},
     {label:"Obj1", x:100, y:100, r:20, style:default1},
@@ -17,13 +26,45 @@ completeState = [
     {label:"Obj1", x:50,  y:200, r:20, style:default2},
     {label:"Obj1", x:100, y:200, r:20, style:default2},
     {label:"Obj1", x:150, y:200, r:20, style:default2}
-  ]
+  ],
   paths: []}
 ];
 emptyState = {
   circles: [],
   paths: []
 };
+
+function itemByLabel(list, label) {
+  for (object in list) {
+    if (list[object].label == label) return list[object];
+  }
+}
+
+function constructPathProperty(start, curve1, curve2, end) {
+  // example: M10,99 C156,99 231,248 400,250
+  return 'M' + start[0] + ',' + start[1] + ' C'
+         + curve1[0] + ',' + curve1[1] + ' '
+         + curve2[0] + ',' + curve2[1] + ' '
+         + end[0] + ',' + end[1]
+}
+
+function translatePaths(state) {
+  // take objects containing {from, to} properties
+  // and construct a formatted string
+  var strPaths = [];
+  for (path in state.paths) {
+    var from = itemByLabel(state.circles, state.paths[path].from);
+    var to = itemByLabel(state.circles, state.paths[path].to);
+    var start = [from.x + from.r, from.y-1];
+    var curve1 = [start[0] + 10, start[1]];
+    var end = [to.x - to.r, to.y-1];
+    var curve2 = [end[0] - 10, end[1]];
+    strPaths.push(
+      constructPathProperty(start, curve1, curve2, end)
+    );
+  }
+  return strPaths;
+}
 
 var svgCanvas = new Vue({
   el: '#svgCanvas',
@@ -40,6 +81,7 @@ var svgCanvas = new Vue({
         this.currentTarget.x += dx / this.scaleFactor;
         this.currentTarget.y += dy / this.scaleFactor;
       }
+      this.paths = translatePaths(this.onState);
     },
     dragStart: function(event, index) {
       this.currentTarget = this.circles[index];
@@ -48,11 +90,12 @@ var svgCanvas = new Vue({
       this.currentTarget = undefined;
     },
     showTab: function(tab) {
-      var onState = completeState[tab];
-      if (!onState) {
-        onState = emptyState;
+      this.onState = completeState[tab];
+      if (!this.onState) {
+        this.onState = emptyState;
       }
-      this.circles = onState.circles;
+      this.circles = this.onState.circles;
+      this.paths = translatePaths(this.onState);
     },
     lineStart: function(event) {
       console.log(event);
@@ -63,7 +106,9 @@ var svgCanvas = new Vue({
     scaleFactorStyle: 'scale(3)',
     mouse: {x:0, y:0},
     currentTarget: undefined,
+    onState: undefined,
     completeState: completeState,
+    paths: [],
     circles: []
   }
 });

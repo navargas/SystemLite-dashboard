@@ -47,6 +47,9 @@
                       class="outerElement"
                       :cx="item.x" :cy="item.y" :r="item.r" :stroke="item.style.outColor"
                       stroke-width="1" :fill="item.style.inColor" />
+              <text text-anchor="middle" :x="item.x" :y="item.y-item.r-8" fill="black" font-size="8">
+                {{ item.label }}
+              </text>
             </g>
           </g>
         </svg>

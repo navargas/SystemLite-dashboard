@@ -1,10 +1,9 @@
 Vue.config.debug = true;
 var componentList = [
-  {name:"Vue", selected:true},
-  {name:"is_working", selected:false},
-  {name:"microservice", selected:false},
-  {name:"asdasdasdasdd", selected:false},
-  {name:"asdasdasdwwwww", selected:false}
+  {name:"Jupyter_Dashboard", selected:true},
+  {name:"User_Modeling", selected:false},
+  {name:"Graph_Microservice", selected:false},
+  {name:"Twitter_Data", selected:false}
 ];
 
 function currentlySelectedIndex(complist) {

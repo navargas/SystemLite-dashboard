@@ -1,11 +1,22 @@
 default1 = {   inColor: "#2B754F",  outColor:"#043E21"   }
 default2 = {   inColor: "#8E345A",  outColor:"#4B0422"   }
 default3 = {   inColor: "#A67A3D",  outColor:"#583505"   }
+default4 = {   inColor: "#2B2E75",  outColor:"#282B6A"   }
 completeState = [
   {circles: [
-    {label:"Obj1", x:320, y:100, r:10, style:default1},
-    {label:"Obj1", x:70,  y:100, r:20, style:default2},
-    {label:"Obj1", x:70,  y:50,  r:20, style:default3}
+    {label:"PostgreSQL", x:260, y:100, r:30, style:default1},
+    {label:"Dashboard_1", x:130,  y:130, r:20, style:default2},
+    {label:"Dashboard_2", x:130,  y:50, r:20, style:default2},
+    {label:"Load_Balancer", x:70,  y:100, r:20, style:default4},
+    {label:"Redis_Cache", x:180,  y:100, r:10, style:default3}
+  ]},
+  {circles: [
+    {label:"Obj1", x:50,  y:100, r:20, style:default1},
+    {label:"Obj1", x:100, y:100, r:20, style:default1},
+    {label:"Obj1", x:150, y:100, r:20, style:default1},
+    {label:"Obj1", x:50,  y:200, r:20, style:default2},
+    {label:"Obj1", x:100, y:200, r:20, style:default2},
+    {label:"Obj1", x:150, y:200, r:20, style:default2}
   ]}
 ];
 emptyState = {

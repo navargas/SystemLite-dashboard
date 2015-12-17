@@ -32,6 +32,8 @@ emptyState = {
   paths: []
 };
 
+var DEFAULT_SCALE = 3;
+
 function itemByLabel(list, label) {
   for (object in list) {
     if (list[object].label == label) return list[object];
@@ -49,14 +51,15 @@ function constructPathProperty(start, curve1, curve2, end) {
 function translatePaths(state) {
   // take objects containing {from, to} properties
   // and construct a formatted string
+  var bezierGap = 10;
   var strPaths = [];
   for (path in state.paths) {
     var from = itemByLabel(state.circles, state.paths[path].from);
     var to = itemByLabel(state.circles, state.paths[path].to);
     var start = [from.x + from.r, from.y-1];
-    var curve1 = [start[0] + 10, start[1]];
+    var curve1 = [start[0] + bezierGap, start[1]];
     var end = [to.x - to.r, to.y-1];
-    var curve2 = [end[0] - 10, end[1]];
+    var curve2 = [end[0] - bezierGap, end[1]];
     strPaths.push(
       constructPathProperty(start, curve1, curve2, end)
     );
@@ -126,6 +129,9 @@ var svgControls = new Vue({
   el: '#canvasControl',
   methods: {
     scaleSvgButton: function(direction) {
+      if (direction === 0) {
+        svgCanvas.scaleFactor = DEFAULT_SCALE;
+      }
       svgCanvas.zoom(direction * .4);
     }
   },

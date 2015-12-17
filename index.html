@@ -54,9 +54,9 @@
                       stroke-width="1" :fill="item.style.inColor" />
               <rect :x="item.x+item.r" :y="item.y-2" rx="2" ry="2" width="2" height="2"
                     class="lineNode" v-on:mousedown="lineStart" />
-              <rect :x="item.x-item.r-2" :y="item.y-1" rx="2" ry="2" width="2" height="2"
+              <rect :x="item.x-item.r-2" :y="item.y-2" rx="2" ry="2" width="2" height="2"
                     class="lineNode" v-on:mousedown="lineStart" />
-              <text text-anchor="middle" :x="item.x" :y="item.y-item.r-8" fill="black" font-size="8">
+              <text text-anchor="middle" :x="item.x" :y="item.y-item.r-4" fill="black" font-size="8">
                 {{ item.label }}
               </text>
             </g>
@@ -66,6 +66,7 @@
       <div class="sl-item footer">
         <div id="canvasControl">
           <span v-on:click="scaleSvgButton(1)" class="scalebutton">+</span>
+          <span v-on:click="scaleSvgButton(0)" class="scalebutton">&#9675;</span>
           <span v-on:click="scaleSvgButton(-1)" class="scalebutton">-</span>
         </div>
       </div>

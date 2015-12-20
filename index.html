@@ -53,13 +53,15 @@
                       :cx="item.x" :cy="item.y" :r="item.r" :stroke="item.style.outColor"
                       stroke-width="1" :fill="item.style.inColor" />
               <rect :x="item.x+item.r" :y="item.y-2" rx="2" ry="2" width="2" height="2"
-                    class="lineNode" v-on:mousedown="lineStart" />
+                    class="lineNode" v-on:mousedown="lineStart($event, $index)" />
               <rect :x="item.x-item.r-2" :y="item.y-2" rx="2" ry="2" width="2" height="2"
-                    class="lineNode" v-on:mousedown="lineStart" />
+                    class="lineNode" v-on:mouseup="connectPath($index)" />
               <text text-anchor="middle" :x="item.x" :y="item.y-item.r-4" fill="black" font-size="8">
                 {{ item.label }}
               </text>
             </g>
+            <!-- Render Active Path -->
+            <path v-if="active_path" class="connectingPath" :d="active_path">
           </g>
         </svg>
       </div>

@@ -8,7 +8,9 @@ completeState = [
     {label:"Dashboard_1", x:130,  y:130, r:20, style:default2},
     {label:"Dashboard_2", x:130,  y:50, r:20, style:default2},
     {label:"Load_Balancer", x:70,  y:100, r:20, style:default4},
-    {label:"Redis_Cache", x:190,  y:40, r:10, style:default3}
+    {label:"Redis_Cache", x:190,  y:40, r:10, style:default3},
+    {label:"New_Path_test", x:70,  y:230, r:10, style:default3},
+    {label:"New_Path_target", x:260,  y:230, r:10, style:default1}
   ],
   paths: [
     {from: "Load_Balancer", to:"Dashboard_1"},
@@ -48,14 +50,24 @@ function constructPathProperty(start, curve1, curve2, end) {
          + end[0] + ',' + end[1]
 }
 
-function translatePaths(state) {
+function filterMousePaths(paths) {
+  return paths.filter(function(value) {
+    return value.to.mouse === undefined;
+  });
+}
+
+function translatePaths(state, mouse) {
   // take objects containing {from, to} properties
   // and construct a formatted string
   var bezierGap = 10;
   var strPaths = [];
   for (path in state.paths) {
+    if (state.paths[path].to.mouse) {
+      var to = {r:0, x:mouse.x, y:mouse.y};
+    } else {
+      var to = itemByLabel(state.circles, state.paths[path].to);
+    }
     var from = itemByLabel(state.circles, state.paths[path].from);
-    var to = itemByLabel(state.circles, state.paths[path].to);
     var start = [from.x + from.r, from.y-1];
     var curve1 = [start[0] + bezierGap, start[1]];
     var end = [to.x - to.r, to.y-1];
@@ -74,21 +86,27 @@ var svgCanvas = new Vue({
       this.scaleFactor += factor;
     },
     mouseMove: function(event) {
-      var dx = event.x - this.mouse.x;
-      var dy = event.y - this.mouse.y;
-      this.mouse.x = event.x;
-      this.mouse.y = event.y;
+      var topOffset = document
+                      .getElementById('svgCanvas')
+                      .getBoundingClientRect()
+                      .top;
+      var dx = event.x/this.scaleFactor - this.mouse.x;
+      var dy = event.y/this.scaleFactor - this.mouse.y - topOffset/this.scaleFactor;
+      this.mouse.x = event.x/this.scaleFactor;
+      this.mouse.y = event.y/this.scaleFactor - topOffset/this.scaleFactor;
       if (this.currentTarget !== undefined) {
-        this.currentTarget.x += dx / this.scaleFactor;
-        this.currentTarget.y += dy / this.scaleFactor;
+        this.currentTarget.x += dx;
+        this.currentTarget.y += dy;
       }
-      this.paths = translatePaths(this.onState);
+      this.paths = translatePaths(this.onState, this.mouse);
     },
     dragStart: function(event, index) {
       this.currentTarget = this.circles[index];
     },
     dragStop: function(event, index) {
       this.currentTarget = undefined;
+      this.onState.paths.$remove(this.mousepath);
+      this.paths = translatePaths(this.onState, this.mouse);
     },
     showTab: function(tab) {
       this.onState = completeState[tab];
@@ -96,14 +114,25 @@ var svgCanvas = new Vue({
         this.onState = emptyState;
       }
       this.circles = this.onState.circles;
-      this.paths = translatePaths(this.onState);
+      this.paths = translatePaths(this.onState, this.mouse);
     },
-    lineStart: function(event) {
-      console.log(event);
+    connectPath: function(itemIndex) {
+      this.onState.paths.push({
+        from: this.mousepath.from,
+        to: this.onState.circles[itemIndex].label
+      });
+      this.onState.paths.$remove(this.mousepath);
+      this.paths = translatePaths(this.onState, this.mouse);
+    },
+    lineStart: function(event, itemIndex) {
+      this.mousepath =
+        {from:this.onState.circles[itemIndex].label, to:{mouse:true}};
+      this.onState.paths.push(this.mousepath);
     }
   },
   data: {
     scaleFactor: 3,
+    mousepath: undefined,
     scaleFactorStyle: 'scale(3)',
     mouse: {x:0, y:0},
     currentTarget: undefined,

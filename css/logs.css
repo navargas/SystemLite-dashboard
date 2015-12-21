@@ -1,0 +1,67 @@
+.log-display {
+  position: fixed;
+  right: 0px;
+  height: 100%;
+  width: 22em;
+  border-left: solid;
+  border-color: #CFCFCF;
+  background-color: whitesmoke;
+  border-width: 1px;
+  padding-left: .8em;
+  padding-top: .4em;
+  overflow: hidden;
+}
+
+.log-display.hidden {
+  right: -22em;
+  transition: 1s;
+}
+.log-display.unhidden {
+  right: 0em;
+  transition: .5s;
+}
+.log-display.alert {
+  background-color: #BF6E6E;
+  transition: .5s;
+}
+
+.log-item {
+  margin-top: .2em;
+  border-bottom: solid;
+  border-width: 1px;
+  border-color: #CFCFCF;
+  padding: 4px;
+}
+.log-item.warn {
+  background-color:rgba(255, 255, 0, 0.12);
+}
+.log-item.debug {
+  background-color:rgba(0, 255, 0, 0.12);
+}
+.log-item.alert {
+  background-color:rgba(255, 0, 0, 0.12);
+}
+
+.log-item div {
+  color: grey;
+}
+
+.log-box {
+  overflow-y: scroll;
+  position: absolute;
+  right: 0px;
+  bottom: 0px;
+  top: 3em;
+  left: .8em;
+}
+
+.log-spacer {
+  height: 20px;
+}
+
+.close-button:before {
+  content: '\bb';
+  font-size: 25px;
+  display: inline;
+  padding-left: .4em;
+}

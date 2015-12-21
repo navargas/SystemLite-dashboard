@@ -10,10 +10,28 @@
     <title>SystemLite</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/svg.css">
+    <link rel="stylesheet" href="css/logs.css">
     <link rel="stylesheet" href="css/tabbar.css">
     <link rel="stylesheet" href="css/footer.css">
   </head>
   <body>
+    <div class="log-display"
+         id="logelement"
+         v-bind:class="{ 'hidden' : isHidden, 'unhidden': !isHidden, 'alert':flashRed }"
+         v-on:click.stop="showLogs()">
+      <div>
+        <span class="log-hide" v-on:click.stop="hideLogs()">
+          Hide Logs<span class="close-button" />
+        </span>
+      </div>
+      <div class="log-box" v-cloak>
+        <div v-for="item in log" class="log-item" v-bind:class="item.level">
+          <div>{{ item.ts }}</div>
+          <span>{{ item.msg }}</span>
+        </div>
+        <div class="log-spacer"></div>
+      </div>
+    </div>
     <div class="sl-page">
       <div class="sl-item header">
         System Lite - Cloud Data Services SRE
@@ -76,5 +94,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.11/vue.js"></script>
     <script src="js/svg.js"></script>
     <script src="js/tabs.js"></script>
+    <script src="js/logs.js"></script>
   </body>
 </html>

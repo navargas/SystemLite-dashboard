@@ -1,5 +1,5 @@
 var sampleData = [
-  {msg: "This is an example", level:'warn', ts:1450658798286}
+  {msg: "Welcome to SystemLite!", level:'debug', ts:1450658798286}
 ];
 
 var logger = new Vue({

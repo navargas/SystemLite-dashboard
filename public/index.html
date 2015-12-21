@@ -25,7 +25,7 @@
         </span>
       </div>
       <div class="log-box" v-cloak>
-        <div v-for="item in log" class="log-item" v-bind:class="item.level">
+        <div v-for="item in logData" class="log-item" v-bind:class="item.level">
           <div>{{ item.ts }}</div>
           <span>{{ item.msg }}</span>
         </div>

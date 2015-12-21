@@ -24,10 +24,15 @@ var logger = new Vue({
         clearInterval(this.alertInterval);
       }
       this.flashRed = false;
+    },
+    log: function(message, severity) {
+      this.logData.push(
+        {msg:message, level:severity||'debug',ts:Date.now()}
+      );
     }
   },
   data: {
-    log: sampleData,
+    logData: sampleData,
     isHidden: true,
     flashRed: false
   }

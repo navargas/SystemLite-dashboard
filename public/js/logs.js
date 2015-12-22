@@ -27,13 +27,13 @@ var logger = new Vue({
     },
     log: function(message, severity) {
       this.logData.push(
-        {msg:message, level:severity||'debug',ts:Date.now()}
+        {msg:message, level:severity||'system',ts:Date.now()}
       );
     }
   },
   data: {
     logData: sampleData,
-    isHidden: true,
+    isHidden: false,
     flashRed: false
   }
 });

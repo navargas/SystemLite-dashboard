@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import tornado.websocket
 import tornado.ioloop
 import tornado.web
 import os
@@ -7,10 +8,21 @@ class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.write("Hello, world")
 
+class SocketHandler(tornado.websocket.WebSocketHandler):
+    def check_origin(self, origin):
+        return True
+    def open(self):
+        print('Connection Opened')
+    def on_message(self, message):
+        self.write_message(u"Your message was: " + message)
+    def close(self):
+        print('Connection Closed')
+
 def make_app():
     path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'public')
     print(path)
     return tornado.web.Application([
+        (r'/ws', SocketHandler),
         (r"/(.*)", tornado.web.StaticFileHandler, {"path": path, "default_filename": "index.html"}),
     ])
 

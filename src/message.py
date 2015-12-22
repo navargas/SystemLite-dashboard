@@ -1,4 +1,6 @@
 import json
+from src import dockerClient
+DockerAPI = dockerClient.DockerAPI()
 
 state = {
     "tabs": [{"name":"NewProject", "selected": True}],

@@ -25,7 +25,6 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
 
 def make_app():
     path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'public')
-    print(path)
     return tornado.web.Application([
         (r'/ws', SocketHandler),
         (r"/(.*)", tornado.web.StaticFileHandler, {"path": path, "default_filename": "index.html"}),

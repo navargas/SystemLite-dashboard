@@ -25,6 +25,10 @@ var logger = new Vue({
       this.flashRed = false;
     },
     log: function(message, severity) {
+      if (severity == 'alert' && this.isHidden) {
+        this.startAlert();
+        setTimeout(this.stopAlert, 2000);
+      }
       this.logData.push(
         {msg:message, level:severity||'system',ts:Date.now()}
       );

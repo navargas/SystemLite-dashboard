@@ -1,35 +1,4 @@
-default1 = {   inColor: "#2B754F",  outColor:"#043E21"   }
-default2 = {   inColor: "#8E345A",  outColor:"#4B0422"   }
-default3 = {   inColor: "#A67A3D",  outColor:"#583505"   }
-default4 = {   inColor: "#2B2E75",  outColor:"#131535"   }
-completeState = [
-  {circles: [
-    {label:"PostgreSQL", x:260, y:100, r:30, style:default1},
-    {label:"Dashboard_1", x:130,  y:130, r:20, style:default2},
-    {label:"Dashboard_2", x:130,  y:50, r:20, style:default2},
-    {label:"Load_Balancer", x:70,  y:100, r:20, style:default4},
-    {label:"Redis_Cache", x:190,  y:40, r:10, style:default3},
-    {label:"New_Path_test", x:70,  y:230, r:10, style:default3},
-    {label:"New_Path_target", x:260,  y:230, r:10, style:default1}
-  ],
-  paths: [
-    {from: "Load_Balancer", to:"Dashboard_1"},
-    {from: "Load_Balancer", to:"Dashboard_2"},
-    {from: "Redis_Cache", to:"PostgreSQL"},
-    {from: "Dashboard_2", to:"Redis_Cache"},
-    {from: "Dashboard_1", to:"Redis_Cache"},
-    {from: "Dashboard_2", to:"PostgreSQL"},
-    {from: "Dashboard_1", to:"PostgreSQL"}
-  ]},
-  {circles: [
-    {label:"Watson_API", x:50,  y:100, r:20, style:default1},
-    {label:"RabittMQ", x:150, y:100, r:20, style:default2}
-  ],
-  paths: [
-    {from: "Watson_API", to:"RabittMQ"}
-  ]}
-];
-emptyState = {
+var emptyState = {
   circles: [],
   paths: []
 };
@@ -109,14 +78,12 @@ var svgCanvas = new Vue({
       this.paths = translatePaths(this.onState, this.mouse);
     },
     showTab: function(tab) {
-      console.log('showing:', tab);
       this.onState = this.completeState[tab];
       if (!this.onState) {
         this.onState = emptyState;
       }
       this.circles = this.onState.circles;
       this.paths = translatePaths(this.onState, this.mouse);
-      console.log('new circles', this.circles);
     },
     connectPath: function(itemIndex) {
       this.onState.paths.push({
@@ -142,7 +109,7 @@ var svgCanvas = new Vue({
     mouse: {x:0, y:0},
     currentTarget: undefined,
     onState: undefined,
-    completeState: completeState,
+    completeState: [],
     paths: [],
     circles: []
   }
@@ -151,7 +118,6 @@ var svgCanvas = new Vue({
 svgCanvas.showTab(0);
 
 document.addEventListener("switchTab", function(data) {
-  console.log('Got switchTab event', data.index);
   svgCanvas.showTab(data.index);
 }, false);
 

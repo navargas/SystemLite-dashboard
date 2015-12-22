@@ -7,7 +7,6 @@ var logger = new Vue({
   methods: {
     hideLogs: function() {
       this.isHidden = true;
-      console.log('show');
     },
     showLogs: function() {
       this.isHidden = false;

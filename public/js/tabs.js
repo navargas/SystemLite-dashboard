@@ -1,10 +1,5 @@
 Vue.config.debug = true;
-var componentList = [
-  {name:"Jupyter_Dashboard", selected:true},
-  {name:"User_Modeling", selected:false},
-  {name:"Graph_Microservice", selected:false},
-  {name:"Twitter_Data", selected:false}
-];
+var componentList = [];
 
 function currentlySelectedIndex(complist) {
   // Return the index of the currently selected tab
@@ -84,14 +79,12 @@ function makeTabTitleEditable(element, componentList) {
 function activateNearbyTab(complist, nearIndex) {
   // Switch to tab to the right of nearindex if it exists
   // otherwise switch to the tab to the left of nearIndex
-  console.log(nearIndex);
   var target = 0;
   if (nearIndex >= complist.length - 1) {
     target = nearIndex - 1;
   } else {
     target = nearIndex + 1;
   }
-  console.log('to', target);
   if (target >= 0) switchToTab(complist, target);
 }
 

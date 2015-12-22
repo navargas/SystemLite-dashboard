@@ -2,6 +2,10 @@ var actions = {
   set_state: function(data) {
     svgCanvas.setState(data.objects);
     tabs.setTabs(data.tabs);
+    logger.log('Loaded remote items');
+  },
+  log: function(data) {
+    logger.log(data.message, data.severity);
   }
 };
 
@@ -9,7 +13,7 @@ function onmessage(event) {
   var incomming = JSON.parse(event.data);
   if (incomming.cmd) {
     if (!actions[incomming.cmd]) {
-      console.log('Unrecognized command', incomming.cmd);
+      console.warn('Unrecognized command', incomming.cmd);
       return;
     }
     actions[incomming.cmd](incomming.data);

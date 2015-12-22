@@ -48,10 +48,18 @@ example = {
     ]
 }
 
-def send(responseObject, jsonCompatibleObject):
-    responseObject.write_message(json.dumps(jsonCompatibleObject))
+class RemoteSocket:
+    def __init__(self, responseObject):
+        self.ws = responseObject
+    def send(self, jsonCompatibleObject):
+        self.ws.write_message(json.dumps(jsonCompatibleObject))
+    def log(self, message, severity="system"):
+        self.send({"cmd":"log", "data":{
+            "severity":severity,
+            "message":message
+        }});
 
-def create_node(responseObject, data, stateObject):
+def create_node(data, stateObject, socket):
     imageName = data["imageName"]
     nodeName = data["label"]
     x = data["position"][0]
@@ -63,7 +71,8 @@ def create_node(responseObject, data, stateObject):
         "style":{"inColor":"#8E345A","outColor":"#4B0422"}
     }
     stateObject["objects"][onTab]["circles"].append(newNode)
-    send(responseObject, {"cmd": "set_state", "data":stateObject})
+    socket.send({"cmd": "set_state", "data":stateObject})
+    DockerAPI.run(imageName, None, nodeName, socket)
 
 commandMap = {
     "create_node": create_node
@@ -72,12 +81,14 @@ commandMap = {
 class MessageAPI:
     def __init__(self):
         self.state = state
+        self.socket = None
     def on_message(self, message, resp):
         msg = json.loads(message)["data"]
         if msg["cmd"] in commandMap:
-            commandMap[msg["cmd"]](resp, msg["data"], self.state)
+            commandMap[msg["cmd"]](msg["data"], self.state, self.socket)
     def initalizeConnection(self, resp):
-        send(resp, {"cmd": "set_state", "data":self.state})
-        send(resp, {"cmd": "log", "data":
+        self.socket = RemoteSocket(resp)
+        self.socket.send({"cmd": "set_state", "data":self.state})
+        self.socket.send({"cmd": "log", "data":
             {"message":"Hello World!", "severity":"debug"}
         })

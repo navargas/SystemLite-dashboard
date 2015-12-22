@@ -115,7 +115,7 @@ var svgCanvas = new Vue({
       ];
       var imageName = prompt(imagePrompt, defaultApplication);
       var nodeName = prompt(namePrompt, "Default_1");
-      if (imageName) {
+      if (imageName && nodeName) {
         send({
           cmd:'create_node',
           data: {imageName:imageName, position:pos, tab:this.onTab, label:nodeName}

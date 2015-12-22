@@ -51,11 +51,12 @@ def send(responseObject, jsonCompatibleObject):
 
 def create_node(responseObject, data, stateObject):
     imageName = data["imageName"]
+    nodeName = data["label"]
     x = data["position"][0]
     y = data["position"][1]
     onTab = data["tab"]
     newNode = {
-        "label":imageName,
+        "label":nodeName,
         "x":x, "y":y, "r":20,
         "style":{"inColor":"#8E345A","outColor":"#4B0422"}
     }

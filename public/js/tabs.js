@@ -44,7 +44,7 @@ function componentByName(complist, name) {
   }
 }
 
-function makeTabTitleEditable(element) {
+function makeTabTitleEditable(element, componentList) {
   // When an active tab is clicked, the title becomes editable
   // when focus is lost of "enter" is pressed the user is prompted
   // to confirm that the name should be changed
@@ -95,31 +95,35 @@ function activateNearbyTab(complist, nearIndex) {
   if (target >= 0) switchToTab(complist, target);
 }
 
-var vm = new Vue({
+var tabs = new Vue({
   el: '#components',
   methods: {
     deleteTab: function(index) {
-      if (index == currentlySelectedIndex(componentList)) {
-        activateNearbyTab(componentList, index);
+      if (index == currentlySelectedIndex(this.compList)) {
+        activateNearbyTab(this.compList, index);
       }
-      if (confirm('Are you sure you wish to delete \"' + componentList[index].name + '"')) {
-        componentList.$remove(componentList[index]);
+      if (confirm('Are you sure you wish to delete \"' + this.compList[index].name + '"')) {
+        this.compList.$remove(this.compList[index]);
       } else {
       }
       return false;
     },
     newTab: function() {
-      componentList.push(
-        {name:nextAvailableName(componentList), selected:false}
+      this.compList.push(
+        {name:nextAvailableName(this.compList), selected:false}
       );
-      switchToTab(componentList, componentList.length-1);
+      switchToTab(this.compList, this.compList.length-1);
     },
     tabClick: function(index, e) {
-      if (index == currentlySelectedIndex(componentList)) {
-        makeTabTitleEditable(e.srcElement);
+      if (index == currentlySelectedIndex(this.compList)) {
+        makeTabTitleEditable(e.srcElement, this.compList);
       } else {
-        switchToTab(componentList, index);
+        switchToTab(this.compList, index);
       }
+    },
+    setTabs: function(tabData) {
+      this.compList = tabData;
+      switchToTab(this.compList, 0);
     }
   },
   data: {

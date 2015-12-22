@@ -109,12 +109,14 @@ var svgCanvas = new Vue({
       this.paths = translatePaths(this.onState, this.mouse);
     },
     showTab: function(tab) {
-      this.onState = completeState[tab];
+      console.log('showing:', tab);
+      this.onState = this.completeState[tab];
       if (!this.onState) {
         this.onState = emptyState;
       }
       this.circles = this.onState.circles;
       this.paths = translatePaths(this.onState, this.mouse);
+      console.log('new circles', this.circles);
     },
     connectPath: function(itemIndex) {
       this.onState.paths.push({
@@ -128,6 +130,9 @@ var svgCanvas = new Vue({
       this.mousepath =
         {from:this.onState.circles[itemIndex].label, to:{mouse:true}};
       this.onState.paths.push(this.mousepath);
+    },
+    setState: function(stateObject) {
+      this.completeState = stateObject;
     }
   },
   data: {

@@ -3,6 +3,10 @@ import tornado.websocket
 import tornado.ioloop
 import tornado.web
 import os
+from src import message
+
+
+MessageAPI = message.MessageAPI()
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -13,8 +17,9 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
         return True
     def open(self):
         print('Connection Opened')
+        MessageAPI.initalizeConnection(self)
     def on_message(self, message):
-        self.write_message(u"Your message was: " + message)
+        MessageAPI.new(message, self)
     def close(self):
         print('Connection Closed')
 

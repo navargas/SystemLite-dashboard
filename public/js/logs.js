@@ -24,6 +24,9 @@ var logger = new Vue({
       }
       this.flashRed = false;
     },
+    clearLogs: function() {
+      this.logData = [];
+    },
     log: function(message, severity) {
       if (severity == 'alert' && this.isHidden) {
         this.startAlert();

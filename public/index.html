@@ -21,7 +21,10 @@
          v-on:click.stop="showLogs()">
       <div>
         <span class="log-hide" v-on:click.stop="hideLogs()">
-          Hide Logs<span class="close-button" />
+          Hide Logs<span class="close-button"></span>
+        </span>
+        <span class="log-hide" v-on:click.stop="clearLogs()">
+          Clear Logs
         </span>
       </div>
       <div class="log-box" v-cloak>

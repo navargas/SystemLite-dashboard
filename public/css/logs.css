@@ -13,6 +13,10 @@
   overflow: hidden;
 }
 
+.log-hide {
+  padding-right: 2em;
+}
+
 .log-display.hidden {
   right: -22em;
   transition: 1s;

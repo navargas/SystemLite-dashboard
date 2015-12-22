@@ -57,7 +57,8 @@
       </div>
       <div class="sl-item body">
         <!-- SVG Board -->
-        <svg width="5000" height="5000" id="svgCanvas" v-on:mouseup="dragStop() "v-on:mousemove="mouseMove">
+        <svg width="5000" height="5000" id="svgCanvas" v-on:mouseup="dragStop()"
+             v-on:mousemove="mouseMove" v-on:dblclick="doubleClickCanvas($event)">
           <g :transform="scaleFactorStyle">
             <!-- Render Paths -->
             <g v-for="path in paths">

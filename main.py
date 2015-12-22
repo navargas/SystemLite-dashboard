@@ -19,7 +19,7 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
         print('Connection Opened')
         MessageAPI.initalizeConnection(self)
     def on_message(self, message):
-        MessageAPI.new(message, self)
+        MessageAPI.on_message(message, self)
     def close(self):
         print('Connection Closed')
 

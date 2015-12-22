@@ -5,6 +5,13 @@ var emptyState = {
 
 var DEFAULT_SCALE = 3;
 
+var dispatchMessage = document.createEvent('Event');
+dispatchMessage.initEvent("dispatchMessage",true,true);
+function send(data) {
+  dispatchMessage.data = data;
+  document.dispatchEvent(dispatchMessage);
+}
+
 function itemByLabel(list, label) {
   for (object in list) {
     if (list[object].label == label) return list[object];
@@ -74,6 +81,7 @@ var svgCanvas = new Vue({
       this.paths = translatePaths(this.onState, this.mouse);
     },
     showTab: function(tab) {
+      this.onTab = tab;
       this.onState = this.completeState[tab];
       if (!this.onState) {
         this.onState = emptyState;
@@ -96,9 +104,25 @@ var svgCanvas = new Vue({
     },
     setState: function(stateObject) {
       this.completeState = stateObject;
+    },
+    doubleClickCanvas: function(event) {
+      var defaultApplication = "navargas/demo-webapp-nodejs";
+      var imagePrompt = "Enter the name of the docker container";
+      var pos = [
+        event.layerX/this.scaleFactor,
+        event.layerY/this.scaleFactor
+      ];
+      var imageName = prompt(imagePrompt, defaultApplication);
+      if (imageName) {
+        send({
+          cmd:'create_node',
+          data: {imageName:imageName, position:pos, tab:this.onTab}
+        });
+      }
     }
   },
   data: {
+    onTab: 0,
     scaleFactor: 3,
     mousepath: undefined,
     scaleFactorStyle: 'scale(3)',

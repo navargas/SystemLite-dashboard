@@ -20,10 +20,10 @@ function onmessage(event) {
   }
 }
 
+var ws = null;
 function Initialize() {
   logger.log('Connecting to server...');
   var connectionAttempt = undefined;
-  var ws = null;
   function attemptConnection(schedule) {
     ws = new WebSocket("ws://" + document.location.host + "/ws");
     ws.onopen = function(event) {
@@ -46,3 +46,7 @@ function Initialize() {
 }
 
 document.addEventListener('DOMContentLoaded', Initialize);
+
+document.addEventListener("dispatchMessage", function(data) {
+  ws.send(JSON.stringify(data));
+}, false);

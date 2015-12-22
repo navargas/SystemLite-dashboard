@@ -2,7 +2,7 @@ import json
 
 state = {
     "tabs": [{"name":"NewProject", "selected": True}],
-    "objects": []
+    "objects": [{"circles":[], "paths":[]}]
 }
 
 example = {
@@ -49,13 +49,32 @@ example = {
 def send(responseObject, jsonCompatibleObject):
     responseObject.write_message(json.dumps(jsonCompatibleObject))
 
+def create_node(responseObject, data, stateObject):
+    imageName = data["imageName"]
+    x = data["position"][0]
+    y = data["position"][1]
+    onTab = data["tab"]
+    newNode = {
+        "label":imageName,
+        "x":x, "y":y, "r":20,
+        "style":{"inColor":"#8E345A","outColor":"#4B0422"}
+    }
+    stateObject["objects"][onTab]["circles"].append(newNode)
+    send(responseObject, {"cmd": "set_state", "data":stateObject})
+
+commandMap = {
+    "create_node": create_node
+}
+
 class MessageAPI:
     def __init__(self):
-        print("Message class initialized")
-    def onmessage(self, message, resp):
-        print(message)
+        self.state = state
+    def on_message(self, message, resp):
+        msg = json.loads(message)["data"]
+        if msg["cmd"] in commandMap:
+            commandMap[msg["cmd"]](resp, msg["data"], self.state)
     def initalizeConnection(self, resp):
-        send(resp, {"cmd": "set_state", "data":example});
+        send(resp, {"cmd": "set_state", "data":self.state})
         send(resp, {"cmd": "log", "data":
             {"message":"Hello World!", "severity":"debug"}
-        });
+        })

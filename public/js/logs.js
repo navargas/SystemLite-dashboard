@@ -1,5 +1,5 @@
 var sampleData = [
-  {msg: "Welcome to SystemLite!", level:'debug', ts:1450658798286}
+  {msg: "Welcome to SystemLite!", level:'debug', ts:1450658798286, count:0}
 ];
 
 var logger = new Vue({
@@ -32,12 +32,20 @@ var logger = new Vue({
         this.startAlert();
         setTimeout(this.stopAlert, 2000);
       }
+      if (message == this.lastMessage) {
+        // Do not show repeated log messages, instead increment count
+        this.logData[this.logData.length - 1].count += 1;
+        this.logData[this.logData.length - 1].ts = Date.now();
+        return;
+      }
       this.logData.push(
-        {msg:message, level:severity||'system',ts:Date.now()}
+        {msg:message, level:severity||'system',ts:Date.now(), count:0}
       );
+      this.lastMessage = message;
     }
   },
   data: {
+    lastMessage: null,
     logData: sampleData,
     isHidden: false,
     flashRed: false

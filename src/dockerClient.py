@@ -14,9 +14,10 @@ def mustHave(hMap, prop):
 
 class DockerAPI:
     def __init__(self):
-        DOCKER_HOST = mustHave(os.environ, 'DOCKER_HOST')
-        self.client = docker.Client(**docker.utils.kwargs_from_env(assert_hostname=False))
-        print('Connected to', DOCKER_HOST)
+        if "DOCKER_HOST" not in os.environ:
+            self.client = docker.Client(base_url="unix://var/run/docker.sock")
+        else:
+            self.client = docker.Client(**docker.utils.kwargs_from_env(assert_hostname=False))
     def run(self, imageName, exposePort, nodeName, socket):
         container = None
         host_config = self.client.create_host_config(

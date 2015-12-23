@@ -29,7 +29,11 @@
       </div>
       <div class="log-box" v-cloak>
         <div v-for="item in logData" class="log-item" v-bind:class="item.level">
-          <div>{{ item.ts }} <span v-if="item.count > 0">({{ item.count }})</span></div>
+          <div>
+            {{ item.ts }}
+            <span v-if="item.count > 0">({{ item.count }})</span>
+            <span v-if="item.source">@ {{ item.source }}</span>
+          </div>
           <span>{{ item.msg }}</span>
         </div>
         <div class="log-spacer"></div>

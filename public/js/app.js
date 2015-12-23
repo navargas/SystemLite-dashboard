@@ -5,7 +5,7 @@ var actions = {
     logger.log('Loaded remote items');
   },
   log: function(data) {
-    logger.log(data.message, data.severity);
+    logger.log(data.message, data.severity, data.source);
   }
 };
 

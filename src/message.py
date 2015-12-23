@@ -1,4 +1,6 @@
+import os
 import json
+import inspect
 from src import dockerClient
 DockerAPI = dockerClient.DockerAPI()
 
@@ -54,9 +56,11 @@ class RemoteSocket:
     def send(self, jsonCompatibleObject):
         self.ws.write_message(json.dumps(jsonCompatibleObject))
     def log(self, message, severity="system"):
+        frame,filename,line_number,function_name,lines,index = inspect.stack()[1]
         self.send({"cmd":"log", "data":{
             "severity":severity,
-            "message":message
+            "message":message,
+            "source":os.path.basename(filename) + ':' + str(line_number)
         }});
 
 def create_node(data, stateObject, socket):
@@ -89,6 +93,4 @@ class MessageAPI:
     def initalizeConnection(self, resp):
         self.socket = RemoteSocket(resp)
         self.socket.send({"cmd": "set_state", "data":self.state})
-        self.socket.send({"cmd": "log", "data":
-            {"message":"Hello World!", "severity":"debug"}
-        })
+        self.socket.log("Hello World!", "debug");

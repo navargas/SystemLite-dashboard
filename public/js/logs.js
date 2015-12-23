@@ -27,7 +27,7 @@ var logger = new Vue({
     clearLogs: function() {
       this.logData = [];
     },
-    log: function(message, severity) {
+    log: function(message, severity, source) {
       if (severity == 'alert' && this.isHidden) {
         this.startAlert();
         setTimeout(this.stopAlert, 2000);
@@ -38,9 +38,13 @@ var logger = new Vue({
         this.logData[this.logData.length - 1].ts = Date.now();
         return;
       }
-      this.logData.push(
-        {msg:message, level:severity||'system',ts:Date.now(), count:0}
-      );
+      this.logData.push({
+        msg: message,
+        level: severity||'system',
+        ts: Date.now(),
+        source: source,
+        count: 0
+      });
       this.lastMessage = message;
     }
   },

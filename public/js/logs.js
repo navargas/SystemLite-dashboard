@@ -46,6 +46,12 @@ var logger = new Vue({
         count: 0
       });
       this.lastMessage = message;
+      // Scoll to bottom when a new log message is issued
+      // Occurs after 50ms to wait for Vue to update DOM
+      setTimeout(function() {
+        var box = document.getElementById('logbox');
+        box.scrollTop = box.scrollHeight;
+      }, 50);
     }
   },
   data: {

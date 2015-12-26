@@ -35,7 +35,7 @@ function filterMousePaths(paths) {
 function translatePaths(state, mouse) {
   // take objects containing {from, to} properties
   // and construct a formatted string
-  var bezierGap = 10;
+  var bezierGap = 15;
   var strPaths = [];
   for (path in state.paths) {
     if (state.paths[path].to.mouse) {

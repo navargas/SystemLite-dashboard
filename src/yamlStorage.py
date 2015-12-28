@@ -13,22 +13,18 @@ class ConfigManager:
 
     Layout:
     nodes/
-        .gitignore              # Should contain '*.pos'
         workspaces1/            # workspaces are created for each session
             order.yml           # file containing the order of the tabs
             tab1/               # Each tab contains a description of 
                 layout.yml      # File describing the layout of the system
-                node_name.pos   # x,y coords of node with name 'node_name'
             tab2/               # Second tab
                 layout.yml      # Layout for second tab
-                node_name.pos   # x,y coords of node with name 'node_name'
             runnable/           # Live workspaces contain files required for running
                 machine1/       # for each machine
         workspaces2/            # second workspace
-            tabs.order          # file containing the order of the tabs
+            order.yml           # file containing the order of the tabs
             tab1/               # Each tab contains a description of 
                 layout.yml      # File describing the layout of the system
-                node_name.pos   # x,y coords of node with name 'node_name'
     """
     def __init__(self, configDir=None):
         if configDir == None:

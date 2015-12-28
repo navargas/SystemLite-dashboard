@@ -2,11 +2,16 @@
 import tornado.websocket
 import tornado.ioloop
 import tornado.web
+import sys
 import os
 from src import message
+from src import dockerClient
+from src import ConfigManager
 
+configManager = ConfigManager()
 
-MessageAPI = message.MessageAPI()
+DockerAPI = dockerClient.DockerAPI(configManager)
+MessageAPI = message.MessageAPI(DockerAPI, configManager)
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):

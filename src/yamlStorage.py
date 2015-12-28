@@ -1,0 +1,105 @@
+import yaml
+import sys
+import os
+from src.util import log
+
+class ConfigManager:
+    """
+    Manage persisted state for nodes. This implementation uses yaml files.
+    Configuration stored in yaml files to facilitate tracking of changes.
+
+    Layout:
+    nodes/
+        .gitignore              # Should contain '*.pos'
+        workspaces1/            # workspaces are created for each session
+            order.yml           # file containing the order of the tabs
+            tab1/               # Each tab contains a description of 
+                layout.yml      # File describing the layout of the system
+                node_name.pos   # x,y coords of node with name 'node_name'
+            tab2/               # Second tab
+                layout.yml      # Layout for second tab
+                node_name.pos   # x,y coords of node with name 'node_name'
+            runnable/           # Live workspaces contain files required for running
+                machine1/       # for each machine
+        workspaces2/            # second workspace
+            tabs.order          # file containing the order of the tabs
+            tab1/               # Each tab contains a description of 
+                layout.yml      # File describing the layout of the system
+                node_name.pos   # x,y coords of node with name 'node_name'
+    """
+    def __init__(self, configDir=None):
+        if configDir == None:
+            self.configDir = os.path.join(
+                os.path.dirname(os.path.realpath(sys.argv[0])), 'nodes/'
+            )
+        else:
+            self.configDir = configDir
+        if os.path.isfile(self.configDir):
+            sys.stderr.write('Config directory is a file\n')
+            sys.exit(1)
+        if not os.path.exists(self.configDir):
+            log('INFO', 'Directory {0} not found. Creating...'.format(self.configDir))
+            os.mkdir(self.configDir)
+    def buildTabState(self, path):
+        layout = {"circles": [], "paths": []}
+        layoutFile = os.path.join(path, 'layout.yml')
+        if not os.path.isfile(layoutFile):
+            return layout 
+        with open(layoutFile, 'r') as stream:
+            nodes = yaml.load(stream)
+        for name, details in nodes.items():
+            obj = {
+                'label': name,
+                'x': details['pos_x'],
+                'y': details['pos_y'],
+                'r': details['size'],
+                'style': {
+                    'inColor': details['colors'][0],
+                    'outColor':details['colors'][1]
+                }
+            }
+            if details['links']:
+                for link in details['links']:
+                    layout['paths'].append({
+                        'from': name,
+                        'to': link
+                    })
+            layout["circles"].append(obj)
+        return layout
+    def getDefaltState(self):
+        state = {"tabs":[], "objects":[]}
+        files = list(os.listdir(self.configDir))
+        if len(files) == 0:
+            os.mkdir(os.path.join(self.configDir, 'Default'))
+            files = list(os.listdir(self.configDir))
+        workspace = os.path.join(self.configDir, files[0])
+        if not os.path.isfile(os.path.join(workspace, 'order.yml')):
+            return {
+                "tabs":
+                    [{"name": "Default","selected":False}],
+                "objects":
+                    []
+            }
+        with open(os.path.join(workspace, 'order.yml'), 'r') as stream:
+            order = yaml.load(stream)['order']
+        for tab in order:
+            tabDir = os.path.join(workspace, tab)
+            if os.path.isdir(tabDir):
+                state["tabs"].append({"name":tab, "selected":False})
+                state["objects"].append(self.buildTabState(tabDir))
+        return state
+    def node(self, nodeName):
+        """
+        Fetch properties for node given by nodeName
+        """
+        return None
+    def modifyExistingNode(self, properties):
+        """
+        Modify node if it exists, otherwise throw an exception
+        """
+        pass
+    def createNewNode(self, nodeName, properties):
+        """
+        Create node if it does not exist, otherwise throw an exception
+        """
+        log('INFO', 'Creating new node {0}'.format(nodeName))

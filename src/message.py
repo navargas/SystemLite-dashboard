@@ -1,54 +1,8 @@
-import os
-import json
 import inspect
+import json
+import os
+from src.util import log
 from src import dockerClient
-DockerAPI = dockerClient.DockerAPI()
-
-state = {
-    "tabs": [{"name":"NewProject", "selected": True}],
-    "objects": [{"circles":[], "paths":[]}]
-}
-
-example = {
-    "objects": [
-        {"circles": [
-            {"label":"PostgreSQL","x":260,"y":100,"r":30,"style":
-                {"inColor":"#2B754F","outColor":"#043E21"}},
-            {"label":"Dashboard_1","x":130,"y":130,"r":20,"style":
-                {"inColor":"#8E345A","outColor":"#4B0422"}},
-            {"label":"Dashboard_2","x":130,"y":50,"r":20,"style":
-                {"inColor":"#8E345A","outColor":"#4B0422"}},
-            {"label":"Load_Balancer","x":70,"y":100,"r":20,"style":
-                {"inColor":"#2B2E75","outColor":"#131535"}},
-            {"label":"Redis_Cache","x":190,"y":40,"r":10,"style":
-                {"inColor":"#A67A3D","outColor":"#583505"}
-            }],
-        "paths": [
-            {"from":"Load_Balancer","to":"Dashboard_1"},
-            {"from":"Load_Balancer","to":"Dashboard_2"},
-            {"from":"Redis_Cache","to":"PostgreSQL"},
-            {"from":"Dashboard_2","to":"Redis_Cache"},
-            {"from":"Dashboard_1","to":"Redis_Cache"},
-            {"from":"Dashboard_2","to":"PostgreSQL"},
-            {"from":"Dashboard_1","to":"PostgreSQL"}
-        ]},
-        {"circles": [
-            {"label":"Watson_API","x":50,"y":100,"r":20,"style":
-                {"inColor":"#2B754F","outColor":"#043E21"}},
-            {"label":"RabittMQ","x":150,"y":100,"r":20,"style":
-                {"inColor":"#8E345A","outColor":"#4B0422"}}
-        ],
-        "paths": [
-            {"from":"Watson_API","to":"RabittMQ"}
-        ]}
-    ],
-    "tabs": [
-        {"name":"Jupyter_Dashboard", "selected":True},
-        {"name":"User_Modeling", "selected":False},
-        {"name":"Graph_Microservice", "selected":False},
-        {"name":"Twitter_Data", "selected":False}
-    ]
-}
 
 class RemoteSocket:
     def __init__(self, responseObject):
@@ -63,34 +17,41 @@ class RemoteSocket:
             "source":os.path.basename(filename) + ':' + str(line_number)
         }});
 
-def create_node(data, stateObject, socket):
-    imageName = data["imageName"]
+def create_node(data, stateObject, socket, dockerAPI, configManager):
+    properties = {}
+    properties['imageName'] = data["imageName"]
     nodeName = data["label"]
     x = data["position"][0]
     y = data["position"][1]
-    onTab = data["tab"]
+    properties["tab"] = data["tab"]
     newNode = {
         "label":nodeName,
         "x":x, "y":y, "r":20,
         "style":{"inColor":"#8E345A","outColor":"#4B0422"}
     }
-    stateObject["objects"][onTab]["circles"].append(newNode)
+    stateObject["objects"][properties["tab"]]["circles"].append(newNode)
     socket.send({"cmd": "set_state", "data":stateObject})
-    DockerAPI.run(imageName, None, nodeName, socket)
+    configManager.createNewNode(nodeName, properties)
 
 commandMap = {
     "create_node": create_node
 }
 
 class MessageAPI:
-    def __init__(self):
-        self.state = state
+    def __init__(self, dockerAPI, configManager):
+        self.configManager = configManager
         self.socket = None
+        self.dockerAPI = dockerAPI
     def on_message(self, message, resp):
         msg = json.loads(message)["data"]
         if msg["cmd"] in commandMap:
-            commandMap[msg["cmd"]](msg["data"], self.state, self.socket)
+            commandMap[msg["cmd"]](msg["data"],
+                                   self.state,
+                                   self.socket,
+                                   self.dockerAPI,
+                                   self.configManager)
     def initalizeConnection(self, resp):
+        self.state = self.configManager.getDefaltState()
         self.socket = RemoteSocket(resp)
         self.socket.send({"cmd": "set_state", "data":self.state})
         self.socket.log("Hello World!", "debug");

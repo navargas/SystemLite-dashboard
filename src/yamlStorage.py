@@ -58,7 +58,7 @@ class ConfigManager:
                     'outColor':details['colors'][1]
                 }
             }
-            if details['links']:
+            if 'links' in details and details['links'] != None:
                 for link in details['links']:
                     layout['paths'].append({
                         'from': name,

@@ -11,7 +11,6 @@ from src import ConfigManager
 configManager = ConfigManager()
 
 DockerAPI = dockerClient.DockerAPI(configManager)
-MessageAPI = message.MessageAPI(DockerAPI, configManager)
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
@@ -21,10 +20,11 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
     def check_origin(self, origin):
         return True
     def open(self):
+        self.messageAPI = message.MessageAPI(DockerAPI, configManager)
+        self.messageAPI.initalizeConnection(self)
         print('Connection Opened')
-        MessageAPI.initalizeConnection(self)
     def on_message(self, message):
-        MessageAPI.on_message(message, self)
+        self.messageAPI.on_message(message, self)
     def close(self):
         print('Connection Closed')
 

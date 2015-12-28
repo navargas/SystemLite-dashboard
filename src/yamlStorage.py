@@ -1,7 +1,10 @@
+import shutil
 import yaml
 import sys
 import os
 from src.util import log
+
+default_workspace = 'Production'
 
 class ConfigManager:
     """
@@ -70,13 +73,13 @@ class ConfigManager:
         state = {"tabs":[], "objects":[]}
         files = list(os.listdir(self.configDir))
         if len(files) == 0:
-            os.mkdir(os.path.join(self.configDir, 'Default'))
+            os.mkdir(os.path.join(self.configDir, default_workspace))
             files = list(os.listdir(self.configDir))
         workspace = os.path.join(self.configDir, files[0])
         if not os.path.isfile(os.path.join(workspace, 'order.yml')):
             return {
                 "tabs":
-                    [{"name": "Default","selected":False}],
+                    [{"name":default_workspace, "selected":False}],
                 "objects":
                     []
             }

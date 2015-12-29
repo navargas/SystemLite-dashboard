@@ -23,15 +23,15 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
         return True
     def open(self):
         self.messageAPI = message.MessageAPI(DockerAPI, configManager)
-        print('Connection Opened')
+        log('DEBUG', 'Connection Opened')
     def on_message(self, message):
         msg = json.loads(message)
-        print(msg)
+        log('DEBUG', msg)
         if 'isTrusted' in msg and 'data' in msg:
             msg = msg['data']
         self.messageAPI.on_message(msg, self)
     def close(self):
-        print('Connection Closed')
+        log('DEBUG', 'Connection Closed')
 
 def make_app():
     path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'public')

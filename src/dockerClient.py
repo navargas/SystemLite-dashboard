@@ -29,7 +29,6 @@ class DockerAPI:
         lastTime = time.time()
         for line in self.client.pull(imageName, stream=True):
             obj = json.loads(line.decode(encoding='UTF-8'))
-            print(obj)
             if time.time() - lastTime < 10:
                 continue
             lastTime = time.time()
@@ -52,7 +51,7 @@ class DockerAPI:
             sys.stderr.write('Cannot find properties for node ' + str(nodeName));
             return False
         if not self.imageDownloaded(properties.imageName):
-            print('Image <{0}> not found, downloading'.format(properties.imageName))
+            log('INFO', 'Image <{0}> not found, downloading'.format(properties.imageName))
             self.downloadImage(properties.imageName)
         host_config = self.client.create_host_config(
             port_bindings=properties.port_bindings

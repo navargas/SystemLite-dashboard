@@ -17,42 +17,42 @@ class RemoteSocket:
             "source":os.path.basename(filename) + ':' + str(line_number)
         }});
 
-def create_node(data, stateObject, socket, dockerAPI, configManager):
-    properties = {}
-    properties['imageName'] = data["imageName"]
-    nodeName = data["label"]
-    x = data["position"][0]
-    y = data["position"][1]
-    properties["tab"] = data["tab"]
-    newNode = {
-        "label":nodeName,
-        "x":x, "y":y, "r":20,
-        "style":{"inColor":"#8E345A","outColor":"#4B0422"}
-    }
-    stateObject["objects"][properties["tab"]]["circles"].append(newNode)
-    socket.send({"cmd": "set_state", "data":stateObject})
-    configManager.createNewNode(nodeName, properties)
-
-commandMap = {
-    "create_node": create_node
-}
 
 class MessageAPI:
     def __init__(self, dockerAPI, configManager):
         self.configManager = configManager
         self.socket = None
         self.dockerAPI = dockerAPI
+        self.commandMap = {
+            "create_node": self.create_node,
+            "commit_changes": self.commit_changes,
+            "initalize_connection":self.initalize_connection
+        }
     def on_message(self, msg, resp):
-        if msg["cmd"] == 'initalize_connection':
-            self.initalizeConnection(resp)
-        elif msg["cmd"] in commandMap:
-            commandMap[msg["cmd"]](msg["data"],
-                                   self.state,
-                                   self.socket,
-                                   self.dockerAPI,
-                                   self.configManager)
-    def initalizeConnection(self, resp):
-        self.state = self.configManager.getDefaltState()
         self.socket = RemoteSocket(resp)
+        if msg["cmd"] in self.commandMap:
+            self.commandMap[msg["cmd"]](msg["data"])
+        else:
+            self.socket.log('Malformed command "{0}"'.format(msg), 'alert')
+    def initalize_connection(self, data):
+        self.workspace = self.configManager.getDefaltWorkspace()
+        self.state = self.configManager.getState(self.workspace)
         self.socket.send({"cmd": "set_state", "data":self.state})
         self.socket.log("Hello World!", "debug");
+    def commit_changes(self, data):
+        self.configManager.commit(self.state, self.workspace)
+    def create_node(self, data):
+        properties = {}
+        properties['imageName'] = data["imageName"]
+        nodeName = data["label"]
+        x = data["position"][0]
+        y = data["position"][1]
+        properties["tab"] = data["tab"]
+        newNode = {
+            "label":nodeName,
+            "x":x, "y":y, "r":20,
+            "style":{"inColor":"#8E345A","outColor":"#4B0422"}
+        }
+        self.state["objects"][properties["tab"]]["circles"].append(newNode)
+        self.socket.send({"cmd": "set_state", "data":self.state})
+        self.configManager.createNewNode(nodeName, properties)

@@ -39,9 +39,32 @@ class ConfigManager:
         if not os.path.exists(self.configDir):
             log('INFO', 'Directory {0} not found. Creating...'.format(self.configDir))
             os.mkdir(self.configDir)
-    def buildTabState(self, path):
+    def commit(self, stateObject, workspaceName):
+        """Write stateObject to layout.yml files"""
+        workspace = os.path.join(self.configDir, workspaceName)
+        for objectIndex, obj in enumerate(stateObject["objects"]):
+            writeObj = {}
+            for circle in obj["circles"]:
+                nodeDetails = {
+                    'image': circle['image'],
+                    'radius': circle['r'],
+                    'position': [circle['x'],circle['y']],
+                    'colors': [circle['style']['inColor'], circle['style']['outColor']]
+                }
+                writeObj[circle['label']] = nodeDetails
+            for path in obj['paths']:
+                if 'links' not in writeObj[path['from']]:
+                    writeObj[path['from']]['links'] = []
+                writeObj[path['from']]['links'].append(path['to'])
+            tabName = stateObject['tabs'][objectIndex]['name']
+            layoutFile = os.path.join(workspace, tabName, 'layout.yml')
+            with open(layoutFile, 'w') as stream:
+                yaml.dump(writeObj, stream)
+    def buildTabState(self, workspaceName):
+        """Read layout.yml file and construct an object"""
         layout = {"circles": [], "paths": []}
-        layoutFile = os.path.join(path, 'layout.yml')
+        workspace = os.path.join(self.configDir, workspaceName)
+        layoutFile = os.path.join(workspace, 'layout.yml')
         if not os.path.isfile(layoutFile):
             return layout 
         with open(layoutFile, 'r') as stream:
@@ -49,9 +72,10 @@ class ConfigManager:
         for name, details in nodes.items():
             obj = {
                 'label': name,
-                'x': details['pos_x'],
-                'y': details['pos_y'],
-                'r': details['size'],
+                'x': details['position'][0],
+                'y': details['position'][1],
+                'r': details['radius'],
+                'image': details['image'],
                 'style': {
                     'inColor': details['colors'][0],
                     'outColor':details['colors'][1]
@@ -65,13 +89,15 @@ class ConfigManager:
                     })
             layout["circles"].append(obj)
         return layout
-    def getDefaltState(self):
-        state = {"tabs":[], "objects":[]}
+    def getDefaltWorkspace(self):
         files = list(os.listdir(self.configDir))
         if len(files) == 0:
             os.mkdir(os.path.join(self.configDir, default_workspace))
             files = list(os.listdir(self.configDir))
-        workspace = os.path.join(self.configDir, files[0])
+        return files[0]
+    def getState(self, workspaceName):
+        state = {"tabs":[], "objects":[]}
+        workspace = os.path.join(self.configDir, workspaceName)
         if not os.path.isfile(os.path.join(workspace, 'order.yml')):
             return {
                 "tabs":

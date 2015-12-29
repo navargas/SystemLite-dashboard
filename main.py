@@ -29,6 +29,10 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
         log('DEBUG', msg)
         if 'isTrusted' in msg and 'data' in msg:
             msg = msg['data']
+        if 'data' not in msg:
+            msg['data'] = {}
+        if 'cmd' not in msg:
+            msg['cmd'] = None
         self.messageAPI.on_message(msg, self)
     def close(self):
         log('DEBUG', 'Connection Closed')

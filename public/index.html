@@ -80,6 +80,7 @@
             <!-- Render Circles -->
             <g v-for="item in circles">
               <circle v-on:mousedown="dragStart($event, $index)"
+                      v-on:dblclick="doubleClickCircle($event, $index)"
                       data-type="circles"
                       class="outerElement"
                       :cx="item.x" :cy="item.y" :r="item.r" :stroke="item.style.outColor"
@@ -102,6 +103,9 @@
           <span v-on:click="scaleSvgButton(1)" class="scalebutton">+</span>
           <span v-on:click="scaleSvgButton(0)" class="scalebutton">&#9675;</span>
           <span v-on:click="scaleSvgButton(-1)" class="scalebutton">-</span>
+          <span class="textbutton active" v-on:click="commitChanges()">
+            COMMIT CHANGES
+          </span>
         </div>
       </div>
     </div>

@@ -150,6 +150,9 @@ svgCanvas.$watch('scaleFactor', function(val) {
 var svgControls = new Vue({
   el: '#canvasControl',
   methods: {
+    commitChanges: function() {
+      send({"cmd":"commit_changes"});
+    },
     scaleSvgButton: function(direction) {
       if (direction === 0) {
         svgCanvas.scaleFactor = DEFAULT_SCALE;

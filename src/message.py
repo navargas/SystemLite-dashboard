@@ -25,6 +25,7 @@ class MessageAPI:
         self.dockerAPI = dockerAPI
         self.commandMap = {
             "create_node": self.create_node,
+            "change_tab_name": self.change_tab_name,
             "commit_changes": self.commit_changes,
             "initalize_connection":self.initalize_connection
         }
@@ -39,6 +40,13 @@ class MessageAPI:
         self.state = self.configManager.getState(self.workspace)
         self.socket.send({"cmd": "set_state", "data":self.state})
         self.socket.log("Hello World!", "debug");
+    def change_tab_name(self, data):
+        index = data['index']
+        newName = data['name']
+        oldname = self.state['tabs'][index]['name']
+        self.state['tabs'][index]['name'] = newName
+        self.socket.send({"cmd": "set_state", "data":self.state})
+        self.socket.log('Changed "{0}" to "{1}"'.format(oldname, newName))
     def commit_changes(self, data):
         self.configManager.commit(self.state, self.workspace)
     def create_node(self, data):

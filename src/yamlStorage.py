@@ -5,6 +5,7 @@ import os
 from src.util import log
 
 default_workspace = 'Production'
+default_tabname = 'New_Tab1'
 
 class ConfigManager:
     """
@@ -94,6 +95,8 @@ class ConfigManager:
         if len(files) == 0:
             os.mkdir(os.path.join(self.configDir, default_workspace))
             files = list(os.listdir(self.configDir))
+        if 'Production' in files:
+            return 'Production'
         return files[0]
     def getState(self, workspaceName):
         state = {"tabs":[], "objects":[]}
@@ -101,7 +104,7 @@ class ConfigManager:
         if not os.path.isfile(os.path.join(workspace, 'order.yml')):
             return {
                 "tabs":
-                    [{"name":default_workspace, "selected":False}],
+                    [{"name":default_tabname, "selected":False}],
                 "objects":
                     []
             }

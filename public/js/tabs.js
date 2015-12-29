@@ -39,7 +39,7 @@ function componentByName(complist, name) {
   }
 }
 
-function makeTabTitleEditable(element, componentList) {
+function makeTabTitleEditable(element, componentList, index) {
   // When an active tab is clicked, the title becomes editable
   // when focus is lost of "enter" is pressed the user is prompted
   // to confirm that the name should be changed
@@ -54,7 +54,11 @@ function makeTabTitleEditable(element, componentList) {
     if (elem.innerText == elem.dataset.oldName) return;
     if (confirm('Are you sure you wish to change the name of \"' +
                 elem.dataset.oldName + '\" to \"' + elem.innerText + '\"')) {
-      componentByName(componentList, elem.dataset.oldName).name = elem.innerText;
+      //componentByName(componentList, elem.dataset.oldName).name = elem.innerText;
+      send({
+        cmd: 'change_tab_name',
+        data: {index:index, name:elem.innerText}
+      });
     } else {
       elem.innerText = elem.dataset.oldName;
     }
@@ -109,7 +113,7 @@ var tabs = new Vue({
     },
     tabClick: function(index, e) {
       if (index == currentlySelectedIndex(this.compList)) {
-        makeTabTitleEditable(e.srcElement, this.compList);
+        makeTabTitleEditable(e.srcElement, this.compList, index);
       } else {
         switchToTab(this.compList, index);
       }

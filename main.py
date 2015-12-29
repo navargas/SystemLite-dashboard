@@ -2,9 +2,11 @@
 import tornado.websocket
 import tornado.ioloop
 import tornado.web
+import json
 import sys
 import os
 from src import message
+from src.util import log
 from src import dockerClient
 from src import ConfigManager
 
@@ -21,10 +23,13 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
         return True
     def open(self):
         self.messageAPI = message.MessageAPI(DockerAPI, configManager)
-        self.messageAPI.initalizeConnection(self)
         print('Connection Opened')
     def on_message(self, message):
-        self.messageAPI.on_message(message, self)
+        msg = json.loads(message)
+        print(msg)
+        if 'isTrusted' in msg and 'data' in msg:
+            msg = msg['data']
+        self.messageAPI.on_message(msg, self)
     def close(self):
         print('Connection Closed')
 

@@ -42,9 +42,10 @@ class MessageAPI:
         self.configManager = configManager
         self.socket = None
         self.dockerAPI = dockerAPI
-    def on_message(self, message, resp):
-        msg = json.loads(message)["data"]
-        if msg["cmd"] in commandMap:
+    def on_message(self, msg, resp):
+        if msg["cmd"] == 'initalize_connection':
+            self.initalizeConnection(resp)
+        elif msg["cmd"] in commandMap:
             commandMap[msg["cmd"]](msg["data"],
                                    self.state,
                                    self.socket,

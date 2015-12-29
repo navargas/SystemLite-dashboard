@@ -9,6 +9,12 @@ var actions = {
   }
 };
 
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) return parts.pop().split(";").shift();
+}
+
 function onmessage(event) {
   var incomming = JSON.parse(event.data);
   if (incomming.cmd) {
@@ -21,6 +27,9 @@ function onmessage(event) {
 }
 
 var ws = null;
+var username = 'DEBUG';
+var session = getCookie('session');
+
 function Initialize() {
   logger.log('Connecting to server...');
   var connectionAttempt = undefined;
@@ -28,6 +37,7 @@ function Initialize() {
     ws = new WebSocket("ws://" + document.location.host + "/ws");
     ws.onopen = function(event) {
       logger.log('Connected!');
+      ws.send(JSON.stringify({cmd:'initalize_connection'}));
     }
     ws.onmessage = onmessage,
     ws.onerror = function(event) {

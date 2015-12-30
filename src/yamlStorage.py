@@ -42,6 +42,7 @@ class ConfigManager:
             os.mkdir(self.configDir)
     def commit(self, stateObject, workspaceName):
         """Write stateObject to layout.yml files"""
+        order = []
         workspace = os.path.join(self.configDir, workspaceName)
         for objectIndex, obj in enumerate(stateObject["objects"]):
             writeObj = {}
@@ -59,12 +60,16 @@ class ConfigManager:
                     writeObj[path['from']]['links'] = []
                 writeObj[path['from']]['links'].append(path['to'])
             tabName = stateObject['tabs'][objectIndex]['name']
+            order.append(tabName)
             tabDir = os.path.join(workspace, tabName)
             if not os.path.isdir(tabDir):
                 os.mkdir(tabDir)
             layoutFile = os.path.join(tabDir, 'layout.yml')
             with open(layoutFile, 'w') as stream:
                 yaml.dump(writeObj, stream)
+        orderFile = os.path.join(workspace, 'order.yml')
+        with open(orderFile, 'w') as stream:
+            yaml.dump({"order":order}, stream)
     def buildTabState(self, workspaceName):
         """Read layout.yml file and construct an object"""
         layout = {"circles": [], "paths": []}

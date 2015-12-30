@@ -60,6 +60,7 @@ class MessageAPI:
         self.socket.log('Changed "{0}" to "{1}"'.format(oldname, newName))
     def commit_changes(self, data):
         self.configManager.commit(self.state, self.workspace)
+        self.socket.log('Configuration saved', 'debug')
     def create_node(self, data):
         properties = {}
         properties['image'] = data["imageName"]

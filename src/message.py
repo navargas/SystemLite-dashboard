@@ -25,6 +25,7 @@ class MessageAPI:
         self.dockerAPI = dockerAPI
         self.commandMap = {
             "create_node": self.create_node,
+            "move_node": self.move_node,
             "connect_nodes": self.connect_nodes,
             "create_new_tab": self.create_new_tab,
             "change_tab_name": self.change_tab_name,
@@ -42,6 +43,15 @@ class MessageAPI:
         if useTab != None:
             data['useTab'] = useTab
         self.socket.send({"cmd": "set_state", "data":data})
+    def nodeByLabel(self, tab, label):
+        nodes = self.state['objects'][tab]['circles'];
+        for node in nodes:
+            if node['label'] == label:
+                return node
+    def move_node(self, data):
+        node = self.nodeByLabel(data['tab'], data['nodeName'])
+        node['x'] = data['x']
+        node['y'] = data['y']
     def connect_nodes(self, data):
         self.state['objects'][data['tab']]['paths'].append({
             'from': data['from'],

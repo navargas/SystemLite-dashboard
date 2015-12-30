@@ -79,7 +79,16 @@ var svgCanvas = new Vue({
     dragStart: function(event, index) {
       this.currentTarget = this.circles[index];
     },
-    dragStop: function(event, index) {
+    dragStop: function() {
+      send({
+        cmd: 'move_node',
+        data: {
+          nodeName: this.currentTarget.label,
+          tab: this.onTab,
+          x: this.currentTarget.x,
+          y: this.currentTarget.y
+        }
+      });
       this.currentTarget = undefined;
       this.onState.paths.$remove(this.mousepath);
       this.paths = translatePaths(this.onState, this.mouse);

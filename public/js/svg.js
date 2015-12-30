@@ -90,12 +90,14 @@ var svgCanvas = new Vue({
       this.paths = translatePaths(this.onState, this.mouse);
     },
     connectPath: function(itemIndex) {
-      this.onState.paths.push({
-        from: this.mousepath.from,
-        to: this.onState.circles[itemIndex].label
+      send({
+        cmd: 'connect_nodes',
+        data: {
+          from: this.mousepath.from,
+          to: this.onState.circles[itemIndex].label,
+          tab: this.onTab
+        }
       });
-      this.onState.paths.$remove(this.mousepath);
-      this.paths = translatePaths(this.onState, this.mouse);
     },
     lineStart: function(event, itemIndex) {
       this.mousepath =

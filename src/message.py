@@ -25,6 +25,7 @@ class MessageAPI:
         self.dockerAPI = dockerAPI
         self.commandMap = {
             "create_node": self.create_node,
+            "connect_nodes": self.connect_nodes,
             "create_new_tab": self.create_new_tab,
             "change_tab_name": self.change_tab_name,
             "commit_changes": self.commit_changes,
@@ -41,6 +42,12 @@ class MessageAPI:
         if useTab != None:
             data['useTab'] = useTab
         self.socket.send({"cmd": "set_state", "data":data})
+    def connect_nodes(self, data):
+        self.state['objects'][data['tab']]['paths'].append({
+            'from': data['from'],
+            'to': data['to']
+        });
+        self.synchronizeState()
     def initalize_connection(self, data):
         self.workspace = self.configManager.getDefaltWorkspace()
         self.state = self.configManager.getState(self.workspace)

@@ -25,6 +25,7 @@ class MessageAPI:
         self.dockerAPI = dockerAPI
         self.commandMap = {
             "create_node": self.create_node,
+            "create_new_tab": self.create_new_tab,
             "change_tab_name": self.change_tab_name,
             "commit_changes": self.commit_changes,
             "initalize_connection":self.initalize_connection
@@ -35,32 +36,43 @@ class MessageAPI:
             self.commandMap[msg["cmd"]](msg["data"])
         else:
             self.socket.log('Malformed command "{0}"'.format(msg), 'alert')
+    def synchronizeState(self, useTab=None):
+        data = {'state': self.state}
+        if useTab != None:
+            data['useTab'] = useTab
+        self.socket.send({"cmd": "set_state", "data":data})
     def initalize_connection(self, data):
         self.workspace = self.configManager.getDefaltWorkspace()
         self.state = self.configManager.getState(self.workspace)
-        self.socket.send({"cmd": "set_state", "data":self.state})
+        self.synchronizeState(useTab=0)
         self.socket.log("Hello World!", "debug");
+    def create_new_tab(self, data):
+        tabName = data['name']
+        self.state['tabs'].append({'name':tabName, 'selected':False})
+        self.state['objects'].append({'circles':[], 'paths':[]});
+        self.synchronizeState(useTab=len(self.state['tabs'])-1)
     def change_tab_name(self, data):
         index = data['index']
         newName = data['name']
         oldname = self.state['tabs'][index]['name']
         self.state['tabs'][index]['name'] = newName
-        self.socket.send({"cmd": "set_state", "data":self.state})
+        self.synchronizeState()
         self.socket.log('Changed "{0}" to "{1}"'.format(oldname, newName))
     def commit_changes(self, data):
         self.configManager.commit(self.state, self.workspace)
     def create_node(self, data):
         properties = {}
-        properties['imageName'] = data["imageName"]
+        properties['image'] = data["imageName"]
         nodeName = data["label"]
         x = data["position"][0]
         y = data["position"][1]
         properties["tab"] = data["tab"]
         newNode = {
             "label":nodeName,
+            "image":data['imageName'],
             "x":x, "y":y, "r":20,
             "style":{"inColor":"#8E345A","outColor":"#4B0422"}
         }
         self.state["objects"][properties["tab"]]["circles"].append(newNode)
-        self.socket.send({"cmd": "set_state", "data":self.state})
+        self.synchronizeState()
         self.configManager.createNewNode(nodeName, properties)

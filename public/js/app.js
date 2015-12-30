@@ -1,7 +1,14 @@
 var actions = {
   set_state: function(data) {
-    svgCanvas.setState(data.objects);
-    tabs.setTabs(data.tabs);
+    console.log('data',  data);
+    var state = data.state;
+    svgCanvas.setState(state.objects);
+    tabs.setTabs(state.tabs);
+    if (data.useTab !== undefined) {
+      switchToTab(tabs.compList, data.useTab)
+    } else {
+      switchToTab(tabs.compList, svgCanvas.onTab || 0)
+    }
     logger.log('Loaded remote items');
   },
   log: function(data) {
@@ -37,7 +44,10 @@ function Initialize() {
     ws = new WebSocket("ws://" + document.location.host + "/ws");
     ws.onopen = function(event) {
       logger.log('Connected!');
-      ws.send(JSON.stringify({cmd:'initalize_connection'}));
+      ws.send(JSON.stringify({
+        cmd:'initalize_connection',
+        data: {'workspace': username}
+      }));
     }
     ws.onmessage = onmessage,
     ws.onerror = function(event) {

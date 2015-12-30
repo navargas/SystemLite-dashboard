@@ -106,10 +106,10 @@ var tabs = new Vue({
       return false;
     },
     newTab: function() {
-      this.compList.push(
-        {name:nextAvailableName(this.compList), selected:false}
-      );
-      switchToTab(this.compList, this.compList.length-1);
+      send({
+        cmd: 'create_new_tab',
+        data: {name:nextAvailableName(this.compList)}
+      });
     },
     tabClick: function(index, e) {
       if (index == currentlySelectedIndex(this.compList)) {
@@ -120,7 +120,6 @@ var tabs = new Vue({
     },
     setTabs: function(tabData) {
       this.compList = tabData;
-      switchToTab(this.compList, 0);
     }
   },
   data: {

@@ -45,6 +45,7 @@ class ConfigManager:
         workspace = os.path.join(self.configDir, workspaceName)
         for objectIndex, obj in enumerate(stateObject["objects"]):
             writeObj = {}
+            log('DEBUG', 'Working on', obj)
             for circle in obj["circles"]:
                 nodeDetails = {
                     'image': circle['image'],
@@ -58,7 +59,10 @@ class ConfigManager:
                     writeObj[path['from']]['links'] = []
                 writeObj[path['from']]['links'].append(path['to'])
             tabName = stateObject['tabs'][objectIndex]['name']
-            layoutFile = os.path.join(workspace, tabName, 'layout.yml')
+            tabDir = os.path.join(workspace, tabName)
+            if not os.path.isdir(tabDir):
+                os.mkdir(tabDir)
+            layoutFile = os.path.join(tabDir, 'layout.yml')
             with open(layoutFile, 'w') as stream:
                 yaml.dump(writeObj, stream)
     def buildTabState(self, workspaceName):
@@ -106,7 +110,7 @@ class ConfigManager:
                 "tabs":
                     [{"name":default_tabname, "selected":False}],
                 "objects":
-                    []
+                    [{'circles':[], 'paths':[]}]
             }
         with open(os.path.join(workspace, 'order.yml'), 'r') as stream:
             order = yaml.load(stream)['order']

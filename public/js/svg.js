@@ -62,10 +62,14 @@ var svgCanvas = new Vue({
       this.scaleFactor += factor;
     },
     mouseMove: function(event) {
-      var dx = event.layerX/this.scaleFactor - this.mouse.x;
-      var dy = event.layerY/this.scaleFactor - this.mouse.y;
-      this.mouse.x = event.layerX/this.scaleFactor;
-      this.mouse.y = event.layerY/this.scaleFactor;
+      var topOffset = document
+                      .getElementById('svgCanvas')
+                      .getBoundingClientRect()
+                      .top;
+      var dx = event.x/this.scaleFactor - this.mouse.x;
+      var dy = event.y/this.scaleFactor - this.mouse.y - topOffset/this.scaleFactor;
+      this.mouse.x = event.x/this.scaleFactor;
+      this.mouse.y = event.y/this.scaleFactor - topOffset/this.scaleFactor;
       if (this.currentTarget !== undefined) {
         this.currentTarget.x += dx;
         this.currentTarget.y += dy;

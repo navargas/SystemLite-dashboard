@@ -30,7 +30,7 @@
     </div>
     <div class="log-display"
          id="logelement"
-         v-bind:class="{ 'alert':flashRed }"
+         v-bind:class="{ 'hidden' : isHidden, 'unhidden': !isHidden, 'alert':flashRed }"
          v-on:click.stop="showLogs()">
       <div>
         <span class="log-hide" v-on:click.stop="hideLogs()">

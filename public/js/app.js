@@ -7,7 +7,7 @@ var actions = {
     if (data.useTab !== undefined) {
       switchToTab(tabs.compList, data.useTab)
     } else {
-      if (svgCanvas.onTab <= tabs.compList.length)
+      if (svgCanvas.onTab >= tabs.compList.length)
         svgCanvas.onTab = tabs.compList.length - 1
       switchToTab(tabs.compList, svgCanvas.onTab || 0)
     }

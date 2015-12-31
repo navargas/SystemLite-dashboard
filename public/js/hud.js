@@ -1,21 +1,29 @@
 var hud = new Vue({
   el: '#hud',
   methods: {
-    showConfirm: function(promptMessage, callback) {
+    showConfirm: function(promptMessage, callback, negativeCallback) {
       this.clearBox();
       this.activePanel = 'confirm';
       this.confirmPanel.prompt = promptMessage;
-      this.activeCallback = callback;
+      this.affirmativeCallback = callback;
+      this.negativeCallback = negativeCallback;
     },
     clearBox: function() {
       this.confirmPanel.prompt = undefined;
       this.activePanel = 'none';
-      this.activeCallback = undefined;
+      this.affirmativeCallback = undefined;
+      this.negativeCallback = undefined;
     },
-    confirmClick: function() {
+    affirmativeClick: function() {
       data = {};
-      if (this.activeCallback)
-        this.activeCallback(data)
+      if (this.affirmativeCallback)
+        this.affirmativeCallback(data);
+      hud.clearBox();
+    },
+    negativeClick: function() {
+      data = {};
+      if (this.negativeCallback)
+        this.negativeCallback(data);
       hud.clearBox();
     },
     closeBox: function() {
@@ -27,7 +35,8 @@ var hud = new Vue({
     confirmPanel: {
       prompt: undefined
     },
-    activeCallback: undefined,
+    affirmativeCallback: undefined,
+    negativeCallback: undefined,
     isHidden: true
   }
 });

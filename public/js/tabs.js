@@ -52,16 +52,18 @@ function makeTabTitleEditable(element, componentList, index) {
     elem.onkeypress = function() {};
     // Ensure that the text has changed
     if (elem.innerText == elem.dataset.oldName) return;
-    if (confirm('Are you sure you wish to change the name of \"' +
-                elem.dataset.oldName + '\" to \"' + elem.innerText + '\"')) {
-      //componentByName(componentList, elem.dataset.oldName).name = elem.innerText;
+    var message = 'Are you sure you wish to change the name of \"' +
+                elem.dataset.oldName + '\" to \"' + elem.innerText + '\"?';
+    hud.showConfirm(message, function() {
+      // yes
       send({
         cmd: 'change_tab_name',
         data: {index:index, name:elem.innerText}
       });
-    } else {
+    }, function() {
+      // no
       elem.innerText = elem.dataset.oldName;
-    }
+    });
   };
   if (element.className != 'tab-name') return;
   element.onblur = function(event) {

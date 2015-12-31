@@ -170,6 +170,9 @@ var svgControls = new Vue({
     commitChanges: function() {
       send({"cmd":"commit_changes"});
     },
+    togglePalette: function() {
+      this.showPalette = !this.showPalette;
+    },
     scaleSvgButton: function(direction) {
       if (direction === 0) {
         svgCanvas.scaleFactor = DEFAULT_SCALE;
@@ -178,5 +181,6 @@ var svgControls = new Vue({
     }
   },
   data: {
+    showPalette: false
   }
 });

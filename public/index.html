@@ -105,15 +105,20 @@
           </g>
         </svg>
       </div>
-      <div class="sl-item footer">
-        <div id="canvasControl">
-          <span v-on:click="scaleSvgButton(1)" class="scalebutton">+</span>
-          <span v-on:click="scaleSvgButton(0)" class="scalebutton">&#9675;</span>
-          <span v-on:click="scaleSvgButton(-1)" class="scalebutton">-</span>
-          <span class="textbutton active" v-on:click="commitChanges()">
-            COMMIT CHANGES
-          </span>
-        </div>
+      <div id="canvasControl" class="sl-item footer" v-bind:class="{ 'expand': showPalette }">
+        <span v-on:click="scaleSvgButton(1)" class="scalebutton">+</span>
+        <span v-on:click="scaleSvgButton(0)" class="scalebutton">&#9675;</span>
+        <span v-on:click="scaleSvgButton(-1)" class="scalebutton">-</span>
+        <span class="textbutton active" v-on:click="commitChanges()">
+          COMMIT CHANGES
+        </span>
+        <span class="textbutton active" v-on:click="togglePalette()">
+          <span v-show="!showPalette">SHOW</span>
+          <span v-show="showPalette">HIDE</span>
+          PALETTE
+        </span>
+        <svg width="100%" height="170" id="svgPalette">
+        </svg>
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.11/vue.js"></script>

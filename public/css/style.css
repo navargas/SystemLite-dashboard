@@ -72,4 +72,11 @@ html, body {
 
 .sl-page .sl-item.footer {
   flex: 0 1 40px;
+  transition: .3s;
+  overflow: hidden;
+}
+
+.sl-page .sl-item.footer.expand {
+  flex: 0 1 240px;
+  transition: .3s;
 }

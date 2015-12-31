@@ -80,6 +80,8 @@ var svgCanvas = new Vue({
       this.currentTarget = this.circles[index];
     },
     dragStop: function() {
+      // ignore this event if there is no active target
+      if (!this.currentTarget) return;
       send({
         cmd: 'move_node',
         data: {

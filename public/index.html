@@ -16,14 +16,21 @@
     <link rel="stylesheet" href="css/hud.css">
   </head>
   <body>
-    <div class="hud" v-bind:class="{ 'hidden' : isHidden }" id="hud">
-      <h1>Node Configuration</h1>
+    <div class="hud" v-show="activePanel != 'none'" id="hud">
+      <h1>{{ activePanel.toUpperCase() }}</h1>
       <span class="close-button" v-on:click="closeBox()"></span>
       <div class="separator"></div>
+      <div class="dynamic">
+        <template v-if="activePanel == 'confirm'">
+          <h2>{{ confirmPanel.prompt }}</h2>
+          <button v-on:click="confirmClick()">YES</button>
+          <button v-on:click="clearBox()">NO</button>
+        </template>
+      </div>
     </div>
     <div class="log-display"
          id="logelement"
-         v-bind:class="{ 'hidden' : isHidden, 'unhidden': !isHidden, 'alert':flashRed }"
+         v-bind:class="{ 'alert':flashRed }"
          v-on:click.stop="showLogs()">
       <div>
         <span class="log-hide" v-on:click.stop="hideLogs()">
@@ -110,10 +117,10 @@
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.11/vue.js"></script>
+    <script src="js/hud.js"></script>
     <script src="js/svg.js"></script>
     <script src="js/tabs.js"></script>
     <script src="js/logs.js"></script>
-    <script src="js/hud.js"></script>
     <script src="js/app.js"></script>
   </body>
 </html>

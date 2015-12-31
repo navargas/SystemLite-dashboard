@@ -2,7 +2,7 @@
   position:fixed;
   top: 2.5em;
   width: 500px;
-  height: 500px;
+  padding-bottom: 16px;
   background-color: white;
   border: solid;
   border-width: 1px;
@@ -39,4 +39,16 @@
   right: 20px;
   top: 10px;
   color: grey;
+}
+
+.hud > .dynamic {
+  padding: 0px 12px 0px 12px;
+}
+
+.hud button {
+  border: solid 2px #333;
+  background-color: #fff;
+  margin-right: 14px;
+  color: #333;
+  padding: 10px;
 }

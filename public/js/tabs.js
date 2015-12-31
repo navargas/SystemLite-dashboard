@@ -96,13 +96,10 @@ var tabs = new Vue({
   el: '#components',
   methods: {
     deleteTab: function(index) {
-      if (index == currentlySelectedIndex(this.compList)) {
-        activateNearbyTab(this.compList, index);
-      }
-      if (confirm('Are you sure you wish to delete \"' + this.compList[index].name + '"')) {
-        this.compList.$remove(this.compList[index]);
-      } else {
-      }
+      var message = 'Are you sure you wish to delete \"' + this.compList[index].name + '"';
+      hud.showConfirm(message, function() {
+        tabs.compList.$remove(tabs.compList[index]);
+      });
       return false;
     },
     newTab: function() {

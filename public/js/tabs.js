@@ -96,9 +96,9 @@ var tabs = new Vue({
   el: '#components',
   methods: {
     deleteTab: function(index) {
-      var message = 'Are you sure you wish to delete \"' + this.compList[index].name + '"';
+      var message = 'Are you sure you wish to delete \"' + this.compList[index].name + '"?';
       hud.showConfirm(message, function() {
-        tabs.compList.$remove(tabs.compList[index]);
+        send({cmd:'delete_tab', data:{tab:index}});
       });
       return false;
     },

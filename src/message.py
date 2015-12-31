@@ -25,6 +25,7 @@ class MessageAPI:
         self.dockerAPI = dockerAPI
         self.commandMap = {
             "create_node": self.create_node,
+            "delete_tab": self.delete_tab,
             "move_node": self.move_node,
             "connect_nodes": self.connect_nodes,
             "create_new_tab": self.create_new_tab,
@@ -48,6 +49,11 @@ class MessageAPI:
         for node in nodes:
             if node['label'] == label:
                 return node
+    def delete_tab(self, data):
+        target = data['tab']
+        del self.state['tabs'][target]
+        del self.state['objects'][target]
+        self.synchronizeState()
     def move_node(self, data):
         node = self.nodeByLabel(data['tab'], data['nodeName'])
         node['x'] = data['x']

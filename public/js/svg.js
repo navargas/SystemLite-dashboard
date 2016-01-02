@@ -173,6 +173,10 @@ var svgControls = new Vue({
     togglePalette: function() {
       this.showPalette = !this.showPalette;
     },
+    setPalette: function(array) {
+      this.nodes = array;
+      this.nodes.unshift(this.defaultNode);
+    },
     scaleSvgButton: function(direction) {
       if (direction === 0) {
         svgCanvas.scaleFactor = DEFAULT_SCALE;
@@ -182,8 +186,8 @@ var svgControls = new Vue({
   },
   data: {
     showPalette: true,
-    nodes: [
-      {name:'New Node', detail:'+', x:85, y:105, fill:'white', strokeColor:'grey'}
-    ]
+    nodes: [],
+    defaultNode:
+      {name:'New Node', detail:'+', fill:'white', strokeColor:'grey', dash:'5,5'}
   }
 });

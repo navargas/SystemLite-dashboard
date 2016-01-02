@@ -23,6 +23,7 @@ class MessageAPI:
         self.configManager = configManager
         self.socket = None
         self.dockerAPI = dockerAPI
+        self.palette = []
         self.commandMap = {
             "create_node": self.create_node,
             "delete_tab": self.delete_tab,
@@ -40,7 +41,7 @@ class MessageAPI:
         else:
             self.socket.log('Malformed command "{0}"'.format(msg), 'alert')
     def synchronizeState(self, useTab=None):
-        data = {'state': self.state}
+        data = {'state': self.state, 'palette':self.palette}
         if useTab != None:
             data['useTab'] = useTab
         self.socket.send({"cmd": "set_state", "data":data})

@@ -3,6 +3,7 @@ var actions = {
     console.log('data',  data);
     var state = data.state;
     svgCanvas.setState(state.objects);
+    svgControls.setPalette(data.palette);
     tabs.setTabs(state.tabs);
     if (data.useTab !== undefined) {
       switchToTab(tabs.compList, data.useTab)

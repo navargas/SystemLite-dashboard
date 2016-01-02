@@ -131,8 +131,8 @@
           COMMIT CHANGES
         </span>
         <span class="textbutton active" v-on:click="togglePalette()">
-          <span v-show="!showPalette">SHOW</span>
           <span v-show="showPalette">HIDE</span>
+          <span v-else>SHOW</span>
           PALETTE
         </span>
         <svg width="100%" height="185" id="svgPalette">

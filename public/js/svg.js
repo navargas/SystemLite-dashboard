@@ -196,7 +196,7 @@ var svgControls = new Vue({
     }
   },
   data: {
-    showPalette: true,
+    showPalette: false,
     nodes: [],
     defaultNode:
       {name:'New Node', detail:'+', fill:'white', strokeColor:'grey', dash:'5,5'}

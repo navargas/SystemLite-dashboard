@@ -121,23 +121,6 @@ var svgCanvas = new Vue({
     },
     setState: function(stateObject) {
       this.completeState = stateObject;
-    },
-    doubleClickCanvas: function(event) {
-      var defaultApplication = "navargas/demo-webapp-nodejs";
-      var imagePrompt = "Enter the name of the docker container";
-      var namePrompt = "Enter the name of this node";
-      var pos = [
-        event.layerX/this.scaleFactor,
-        event.layerY/this.scaleFactor
-      ];
-      var imageName = prompt(imagePrompt, defaultApplication);
-      var nodeName = prompt(namePrompt, "Default_1");
-      if (imageName && nodeName) {
-        send({
-          cmd:'create_node',
-          data: {imageName:imageName, position:pos, tab:this.onTab, label:nodeName}
-        });
-      }
     }
   },
   data: {

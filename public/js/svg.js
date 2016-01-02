@@ -186,6 +186,19 @@ var svgControls = new Vue({
         this.newNode();
         return;
       }
+      var target = this.nodes[index];
+      var pos = [100, 100];
+      send({
+        cmd:'create_node',
+        data: {
+          imageName: target.image,
+          inColor: target.fill,
+          outColor: target.strokeColor,
+          position: pos,
+          tab: svgCanvas.onTab,
+          label: target.name
+        }
+      });
     },
     setPalette: function(array) {
       this.nodes = array;

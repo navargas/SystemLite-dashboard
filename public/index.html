@@ -99,7 +99,7 @@
              v-on:mousemove="mouseMove" v-on:dblclick="doubleClickCanvas($event)">
           <g :transform="scaleFactorStyle">
             <!-- Render Paths -->
-            <g v-for="path in paths">
+            <g v-for="path in paths" track-by="$index">
               <path class="connectingPath" :d="path">
             </g>
             <!-- Render Circles -->

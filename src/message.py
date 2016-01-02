@@ -107,7 +107,7 @@ class MessageAPI:
             "label":nodeName,
             "image":data['imageName'],
             "x":x, "y":y, "r":20,
-            "style":{"inColor":"#8E345A","outColor":"#4B0422"}
+            "style":{"inColor":data["inColor"],"outColor":data["outColor"]}
         }
         self.state["objects"][properties["tab"]]["circles"].append(newNode)
         self.synchronizeState()

@@ -26,6 +26,7 @@ class MessageAPI:
         self.palette = []
         self.commandMap = {
             "create_node": self.create_node,
+            "new_palette_item": self.new_palette_item,
             "delete_tab": self.delete_tab,
             "move_node": self.move_node,
             "connect_nodes": self.connect_nodes,
@@ -59,6 +60,15 @@ class MessageAPI:
         node = self.nodeByLabel(data['tab'], data['nodeName'])
         node['x'] = data['x']
         node['y'] = data['y']
+    def new_palette_item(self, data):
+        newItem = {
+            'name': data['nodeName'],
+            'image': data['image'],
+            'fill': data['inColor'],
+            'strokeColor': 'black'
+        }
+        self.palette.append(newItem)
+        self.synchronizeState()
     def connect_nodes(self, data):
         self.state['objects'][data['tab']]['paths'].append({
             'from': data['from'],
@@ -68,6 +78,7 @@ class MessageAPI:
     def initalize_connection(self, data):
         self.workspace = self.configManager.getDefaltWorkspace()
         self.state = self.configManager.getState(self.workspace)
+        self.palette = self.configManager.getPalette(self.workspace)
         self.synchronizeState(useTab=0)
         self.socket.log("Hello World!", "debug");
     def create_new_tab(self, data):
@@ -83,7 +94,7 @@ class MessageAPI:
         self.synchronizeState()
         self.socket.log('Changed "{0}" to "{1}"'.format(oldname, newName))
     def commit_changes(self, data):
-        self.configManager.commit(self.state, self.workspace)
+        self.configManager.commit(self.state, self.palette, self.workspace)
         self.socket.log('Configuration saved', 'debug')
     def create_node(self, data):
         properties = {}

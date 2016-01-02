@@ -40,7 +40,7 @@ class ConfigManager:
         if not os.path.exists(self.configDir):
             log('INFO', 'Directory {0} not found. Creating...'.format(self.configDir))
             os.mkdir(self.configDir)
-    def commit(self, stateObject, workspaceName):
+    def commit(self, stateObject, palette, workspaceName):
         """Write stateObject to layout.yml files"""
         order = []
         workspace = os.path.join(self.configDir, workspaceName)
@@ -70,6 +70,9 @@ class ConfigManager:
         orderFile = os.path.join(workspace, 'order.yml')
         with open(orderFile, 'w') as stream:
             yaml.dump({"order":order}, stream)
+        paletteFile = os.path.join(workspace, 'palette.yml')
+        with open(paletteFile, 'w') as stream:
+            yaml.dump(palette, stream)
     def buildTabState(self, workspaceName):
         """Read layout.yml file and construct an object"""
         layout = {"circles": [], "paths": []}
@@ -107,6 +110,14 @@ class ConfigManager:
         if 'Production' in files:
             return 'Production'
         return files[0]
+    def getPalette(self, workspaceName):
+        workspace = os.path.join(self.configDir, workspaceName)
+        paletteFile = os.path.join(workspace, 'palette.yml')
+        if not os.path.isfile(paletteFile):
+            return []
+        with open(paletteFile, 'r') as stream:
+            items = yaml.load(stream)
+        return items
     def getState(self, workspaceName):
         state = {"tabs":[], "objects":[]}
         workspace = os.path.join(self.configDir, workspaceName)

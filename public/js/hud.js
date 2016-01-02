@@ -27,7 +27,6 @@ var hud = new Vue({
         data.nodeName = document.getElementById('nodeNameInput').value;
         data.image = document.getElementById('imageNameInput').value;
       }
-      console.log(data);
       if (this.affirmativeCallback)
         this.affirmativeCallback(data);
       hud.clearBox();

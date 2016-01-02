@@ -174,8 +174,11 @@ var svgControls = new Vue({
       this.showPalette = !this.showPalette;
     },
     newNode: function() {
-      hud.showNewItem(function() {
-        console.log('Item saved');
+      hud.showNewItem(function(data) {
+        send({
+          cmd: 'new_palette_item',
+          data: data
+        });
       });
     },
     nodeClick: function(index) {

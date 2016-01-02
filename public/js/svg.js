@@ -173,6 +173,17 @@ var svgControls = new Vue({
     togglePalette: function() {
       this.showPalette = !this.showPalette;
     },
+    newNode: function() {
+      hud.showNewItem(function() {
+        console.log('Item saved');
+      });
+    },
+    nodeClick: function(index) {
+      if (index === 0) {
+        this.newNode();
+        return;
+      }
+    },
     setPalette: function(array) {
       this.nodes = array;
       this.nodes.unshift(this.defaultNode);

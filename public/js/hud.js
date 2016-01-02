@@ -8,6 +8,12 @@ var hud = new Vue({
       this.affirmativeCallback = callback;
       this.negativeCallback = negativeCallback;
     },
+    showNewItem: function(callback, negativeCallback) {
+      this.clearBox();
+      this.activePanel = 'new item';
+      this.affirmativeCallback = callback;
+      this.negativeCallback = negativeCallback;
+    },
     clearBox: function() {
       this.confirmPanel.prompt = undefined;
       this.activePanel = 'none';
@@ -16,9 +22,18 @@ var hud = new Vue({
     },
     affirmativeClick: function() {
       data = {};
+      if (this.activePanel == 'new item') {
+        data.inColor = this.newItemPanel.previewColor;
+        data.nodeName = document.getElementById('nodeNameInput').value;
+        data.image = document.getElementById('imageNameInput').value;
+      }
+      console.log(data);
       if (this.affirmativeCallback)
         this.affirmativeCallback(data);
       hud.clearBox();
+    },
+    colorChange: function(event) {
+      this.newItemPanel.previewColor = event.srcElement.value;
     },
     negativeClick: function() {
       data = {};
@@ -34,6 +49,9 @@ var hud = new Vue({
     activePanel: 'none',
     confirmPanel: {
       prompt: undefined
+    },
+    newItemPanel: {
+      previewColor: '#AA0000'
     },
     affirmativeCallback: undefined,
     negativeCallback: undefined,

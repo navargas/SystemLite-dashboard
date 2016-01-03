@@ -194,22 +194,37 @@ var svgControls = new Vue({
         return;
       }
       var target = this.nodes[index];
-      var pos = [100, 100];
-      send({
-        cmd:'create_node',
-        data: {
-          imageName: target.image,
-          inColor: target.fill,
-          outColor: target.strokeColor,
-          position: pos,
-          tab: svgCanvas.onTab,
-          label: target.name
+      hud.showPaletteAction(index, {
+        accept: function() {
+          send({
+            cmd:'create_node',
+            data: {
+              imageName: target.image,
+              inColor: target.fill,
+              outColor: target.strokeColor,
+              position: [100, 100],
+              tab: svgCanvas.onTab,
+              label: target.name
+            }
+          });
+        },
+        deleteItem: function() {
+          // offset one to account for fake item 0
+          var idx = index - 1;
+          send({
+            cmd: 'delete_palette_item',
+            data: {
+              index: idx
+            }
+          });
+        },
+        modify: function() {
+
         }
       });
     },
     setPalette: function(array) {
-      array.push(this.defaultNode);
-      array.reverse()
+      array.unshift(this.defaultNode);
       this.nodes = array;
     },
     scaleSvgButton: function(direction) {

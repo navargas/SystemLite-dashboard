@@ -42,6 +42,7 @@
 }
 
 .hud > .dynamic {
+  margin-top: 10px;
   max-height: 600px;
   overflow: scroll;
   padding: 0px 12px 0px 12px;

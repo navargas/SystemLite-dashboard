@@ -36,6 +36,11 @@
           <button v-on:click="affirmativeClick()">SAVE</button>
           <button v-on:click="negativeClick()">CANCEL</button>
         </template>
+        <template v-if="activePanel == 'palette node'">
+          <button v-on:click="affirmativeClick()">PLACE ON CANVAS</button>
+          <button v-on:click="negativeClick()">MODIFY</button>
+          <button v-on:click="deleteNode()">DELETE ITEM</button>
+        </template>
         <template v-if="activePanel == 'new item'">
           <svg width="160" height="160" class="nodePreview">
             <circle cx="70" cy="70" r="60" stroke="black"

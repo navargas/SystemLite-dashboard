@@ -28,6 +28,7 @@ class MessageAPI:
         self.commandMap = {
             "create_node": self.create_node,
             "new_palette_item": self.new_palette_item,
+            "delete_palette_item": self.delete_palette_item,
             "delete_tab": self.delete_tab,
             "delete_node": self.delete_node,
             "move_node": self.move_node,
@@ -88,6 +89,9 @@ class MessageAPI:
         node = self.nodeByLabel(data['tab'], data['nodeName'])
         node['x'] = data['x']
         node['y'] = data['y']
+    def delete_palette_item(self, data):
+        del self.palette[data['index']]
+        self.synchronizeState()
     def new_palette_item(self, data):
         newItem = {
             'name': data['nodeName'],
@@ -95,7 +99,7 @@ class MessageAPI:
             'fill': data['inColor'],
             'strokeColor': 'black'
         }
-        self.palette.append(newItem)
+        self.palette.insert(0, newItem)
         self.synchronizeState()
     def connect_nodes(self, data):
         self.state['objects'][data['tab']]['paths'].append({

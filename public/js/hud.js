@@ -14,6 +14,17 @@ var hud = new Vue({
       this.affirmativeCallback = callback;
       this.negativeCallback = negativeCallback;
     },
+    showNodeSettings: function(node, callbacks) {
+      this.clearBox();
+      this.nodeSettingsPanel.name = node.label;
+      this.activePanel = 'node settings';
+      this.affirmativeCallback = callbacks.accept;
+      this.negativeCallback = callbacks.cancel;
+      this.deleteCallback = callbacks.deleteNode;
+    },
+    deleteNode: function() {
+      if (this.deleteCallback) this.deleteCallback();
+    },
     clearBox: function() {
       this.confirmPanel.prompt = undefined;
       this.activePanel = 'none';
@@ -52,8 +63,12 @@ var hud = new Vue({
     newItemPanel: {
       previewColor: '#AA0000'
     },
+    nodeSettingsPanel: {
+      name: 'testing'
+    },
     affirmativeCallback: undefined,
     negativeCallback: undefined,
+    deleteCallback: undefined,
     isHidden: true
   }
 });

@@ -1,5 +1,6 @@
 import inspect
 import json
+import re
 import os
 from src.util import log
 from src import dockerClient
@@ -28,6 +29,7 @@ class MessageAPI:
             "create_node": self.create_node,
             "new_palette_item": self.new_palette_item,
             "delete_tab": self.delete_tab,
+            "delete_node": self.delete_node,
             "move_node": self.move_node,
             "connect_nodes": self.connect_nodes,
             "create_new_tab": self.create_new_tab,
@@ -46,11 +48,37 @@ class MessageAPI:
         if useTab != None:
             data['useTab'] = useTab
         self.socket.send({"cmd": "set_state", "data":data})
+    def prunePaths(self, tabIndex, nodeName):
+        targetIndices = []
+        paths = self.state['objects'][tabIndex]['paths']
+        newArray = []
+        for path in paths:
+            if path['from'] != nodeName and path['to'] != nodeName:
+                newArray.append(path)
+        self.state['objects'][tabIndex]['paths'] = newArray
     def nodeByLabel(self, tab, label):
         nodes = self.state['objects'][tab]['circles'];
         for node in nodes:
             if node['label'] == label:
                 return node
+    def getUniqueName(self, nodeName, tabIndex):
+        labels = []
+        for item in self.state["objects"][tabIndex]["circles"]:
+            labels.append(item['label'])
+        while nodeName in labels:
+            reg = re.match('([a-z_0-9A-Z]+_)([0-9]+)', nodeName)
+            if not reg:
+                nodeName += '_1'
+            else:
+                prefix = reg.group(1)
+                nextNumber = int(reg.group(2)) + 1
+                nodeName = prefix + str(nextNumber)
+        return nodeName
+    def delete_node(self, data):
+        target = self.state['objects'][data['tab']]['circles'][data['index']]
+        self.prunePaths(data['tab'], target['label'])
+        del self.state['objects'][data['tab']]['circles'][data['index']]
+        self.synchronizeState()
     def delete_tab(self, data):
         target = data['tab']
         del self.state['tabs'][target]
@@ -104,7 +132,7 @@ class MessageAPI:
         y = data["position"][1]
         properties["tab"] = data["tab"]
         newNode = {
-            "label":nodeName,
+            "label":self.getUniqueName(nodeName, data['tab']),
             "image":data['imageName'],
             "x":x, "y":y, "r":20,
             "style":{"inColor":data["inColor"],"outColor":data["outColor"]}

@@ -121,6 +121,30 @@ var svgCanvas = new Vue({
     },
     setState: function(stateObject) {
       this.completeState = stateObject;
+    },
+    doubleClickCircle: function(event, index) {
+      var nodeName = this.circles[index].label;
+      var onTab = this.onTab;
+      hud.showNodeSettings(this.circles[index], {
+        accept: function() {
+
+        },
+        cancel: function() {
+
+        },
+        deleteNode: function() {
+          var message = 'Are you sure you wish to delete ' + nodeName + '?';
+          hud.showConfirm(message, function() {
+            send({
+              cmd: 'delete_node',
+              data: {
+                tab: onTab,
+                index: index
+              }
+            });
+          });
+        }
+      });
     }
   },
   data: {
@@ -184,8 +208,9 @@ var svgControls = new Vue({
       });
     },
     setPalette: function(array) {
+      array.push(this.defaultNode);
+      array.reverse()
       this.nodes = array;
-      this.nodes.unshift(this.defaultNode);
     },
     scaleSvgButton: function(direction) {
       if (direction === 0) {

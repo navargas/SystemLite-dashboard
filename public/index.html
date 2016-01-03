@@ -26,6 +26,16 @@
           <button v-on:click="affirmativeClick()">YES</button>
           <button v-on:click="negativeClick()">NO</button>
         </template>
+        <template v-if="activePanel == 'node settings'">
+          <input placeholder="Node Name"
+                 type="text"
+                 id="nodeNameInput"
+                 value="{{ nodeSettingsPanel.name }}">
+          </input>
+          <button v-on:click="deleteNode()">DELETE NODE</button>
+          <button v-on:click="affirmativeClick()">SAVE</button>
+          <button v-on:click="negativeClick()">CANCEL</button>
+        </template>
         <template v-if="activePanel == 'new item'">
           <svg width="160" height="160" class="nodePreview">
             <circle cx="70" cy="70" r="60" stroke="black"

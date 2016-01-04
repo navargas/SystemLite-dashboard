@@ -64,6 +64,9 @@ var svgCanvas = new Vue({
     pathClick: function(index) {
       this.activePathIndex = index;
     },
+    canvasClick: function() {
+      this.activePathIndex = null;
+    },
     mouseMove: function(event) {
       var topOffset = document
                       .getElementById('svgCanvas')
@@ -166,6 +169,8 @@ var svgCanvas = new Vue({
 });
 
 svgCanvas.showTab(0);
+
+document.addEventListener("keydown", svgCanvas.keyPress);
 
 document.addEventListener("switchTab", function(data) {
   svgCanvas.showTab(data.index);

@@ -111,7 +111,7 @@
       <div class="sl-item body">
         <!-- SVG Board -->
         <svg width="5000" height="5000" id="svgCanvas" v-on:mouseup="dragStop()"
-             v-on:mousemove="mouseMove">
+             v-on:mousemove="mouseMove" v-on:mousedown="canvasClick">
           <defs>
             <filter id="glow">
               <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>

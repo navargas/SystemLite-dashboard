@@ -31,8 +31,9 @@ var hud = new Vue({
       this.deleteCallback = callbacks.deleteItem;
     },
     deleteNode: function() {
+      var callback = this.deleteCallback;
       this.clearBox();
-      if (this.deleteCallback) this.deleteCallback();
+      if (callback) callback();
     },
     clearBox: function() {
       this.confirmPanel.prompt = undefined;

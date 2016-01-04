@@ -5,6 +5,7 @@ import sys
 import os
 from src.util import log
 from src import ConfigManager
+from src.util import StreamSocket
 
 def mustHave(hMap, prop):
     if prop not in hMap:
@@ -74,3 +75,43 @@ class DockerAPI:
         )
         self.client.start(container=container.get('Id'))
         socket.log(str(imageName) + " started.", 'debug')
+
+class ContainerClient:
+    def __init__(self, dockerAPI, image, containerName,
+                 portsBindings=None, binds=None, ports=None, command=None):
+        """
+        Check if image is downloaded, if not download it
+        Next check if container is started, if not start it
+        """
+        self.dockerAPI = dockerAPI
+        self.image = image
+        self.container = containerName
+        stderr = StreamSocket(sys.stderr)
+        if not dockerAPI.imageDownloaded(self.image):
+            stderr.log('Downloading image "{0}"'.format(self.image))
+            dockerAPI.downloadImage(self.image, stderr)
+        status = dockerAPI.status(self.container)
+        if status == None:
+            container = self.createContainer(portsBindings, binds, ports, command)
+            dockerAPI.client.start(container)
+            stderr.log('{0} online'.format(self.container))
+        elif status == 'running':
+            stderr.log('{0} online'.format(self.container))
+        elif status == 'created':
+            container = dockerAPI.container(self.container)['Id']
+            dockerAPI.client.start(container)
+            stderr.log('{0} online'.format(self.container))
+        else:
+            stderr.log('Unrecognized status <{0}>'.format(status))
+            sys.exit(1)
+    def createContainer(self, portsBindings, binds, ports, command):
+        dnsport = self.dockerAPI.client.create_host_config(
+            port_bindings=portsBindings,
+            binds=binds
+        )
+        container = self.dockerAPI.client.create_container(
+            detach=True, ports=ports,
+            name=self.container, host_config=dnsport,
+            image=self.image, command=command
+        ).get('Id')
+        return container

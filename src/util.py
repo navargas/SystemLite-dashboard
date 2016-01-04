@@ -9,3 +9,15 @@ if 'LOG_LEVEL' in os.environ:
 def log(level, *elements):
     if LEVELS.index(level) <= LOG_LEVEL:
         print(*elements)
+
+class NullSocket:
+    def send(self, jsonCompatibleObject):
+        pass
+    def log(self, message, severity="system"):
+        pass
+
+class StreamSocket(NullSocket):
+    def __init__(self, stream):
+        self.stream = stream
+    def log(self, message, severity="system"):
+        self.stream.write('[{0}]: {1}\n'.format(severity, message))

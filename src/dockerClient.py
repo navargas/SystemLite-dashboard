@@ -38,13 +38,26 @@ class DockerAPI:
                 lastLayer = obj["id"]
                 socket.log(str(imageName) + ": downloading layer " + str(obj["id"]))
         return True
+    def container(self, containerName):
+        try:
+            return self.client.inspect_container(containerName)
+        except docker.errors.NotFound as e:
+            return None
+    def status(self, containerName):
+        try:
+            return self.client.inspect_container(containerName)['State']['Status']
+        except docker.errors.NotFound as e:
+            return None
     def addImage(self, imageName, exposePort, nodeName, socket):
         pass
     def imageDownloaded(self, imageName):
         """
         Return True if image has been downloaded
         """
-        return True
+        try:
+            return self.client.inspect_image(imageName)
+        except docker.errors.NotFound as e:
+            return False
     def run(self, nodeName):
         properties = self.configManager.node(nodeName)
         if properties == None:

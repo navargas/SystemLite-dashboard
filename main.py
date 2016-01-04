@@ -5,6 +5,7 @@ import tornado.web
 import json
 import sys
 import os
+from src import dns
 from src import message
 from src.util import log
 from src import dockerClient
@@ -13,6 +14,8 @@ from src import ConfigManager
 configManager = ConfigManager()
 
 DockerAPI = dockerClient.DockerAPI(configManager)
+
+dns = dns.Client(DockerAPI)
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):

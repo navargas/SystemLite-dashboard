@@ -67,6 +67,32 @@ var svgCanvas = new Vue({
     canvasClick: function() {
       this.activePathIndex = null;
     },
+    keyPress: function(event) {
+      var KeyID = event.keyCode;
+      var d = event.srcElement || event.target;
+      var sourceTag = d.tagName.toUpperCase();
+      switch(KeyID)
+      {
+        case 8:
+          if (sourceTag != 'BODY') break;
+          event.preventDefault();
+          if (this.activePathIndex !== null) {
+            send({
+              cmd: 'delete_path',
+              data: {
+                tab: this.onTab,
+                pathIndex: this.activePathIndex
+              }
+            });
+          }
+          break;
+        case 46:
+          console.log("delete");
+          break;
+        default:
+          break;
+      }
+    },
     mouseMove: function(event) {
       var topOffset = document
                       .getElementById('svgCanvas')

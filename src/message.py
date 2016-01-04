@@ -30,6 +30,7 @@ class MessageAPI:
             "new_palette_item": self.new_palette_item,
             "delete_palette_item": self.delete_palette_item,
             "delete_tab": self.delete_tab,
+            "delete_path": self.delete_path,
             "delete_node": self.delete_node,
             "move_node": self.move_node,
             "connect_nodes": self.connect_nodes,
@@ -79,6 +80,9 @@ class MessageAPI:
         target = self.state['objects'][data['tab']]['circles'][data['index']]
         self.prunePaths(data['tab'], target['label'])
         del self.state['objects'][data['tab']]['circles'][data['index']]
+        self.synchronizeState()
+    def delete_path(self, data):
+        del self.state['objects'][data['tab']]['paths'][data['pathIndex']]
         self.synchronizeState()
     def delete_tab(self, data):
         target = data['tab']

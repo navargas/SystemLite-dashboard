@@ -61,6 +61,9 @@ var svgCanvas = new Vue({
     zoom: function(factor) {
       this.scaleFactor += factor;
     },
+    pathClick: function(index) {
+      this.activePathIndex = index;
+    },
     mouseMove: function(event) {
       var topOffset = document
                       .getElementById('svgCanvas')
@@ -150,6 +153,7 @@ var svgCanvas = new Vue({
   data: {
     onTab: 0,
     scaleFactor: 3,
+    activePathIndex: null,
     mousepath: undefined,
     scaleFactorStyle: 'scale(3)',
     mouse: {x:0, y:0},

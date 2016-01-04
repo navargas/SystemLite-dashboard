@@ -112,10 +112,20 @@
         <!-- SVG Board -->
         <svg width="5000" height="5000" id="svgCanvas" v-on:mouseup="dragStop()"
              v-on:mousemove="mouseMove">
+          <defs>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
           <g :transform="scaleFactorStyle">
             <!-- Render Paths -->
             <g v-for="path in paths" track-by="$index">
-              <path class="connectingPath" :d="path">
+              <path class="connectingPath" :d="path" v-on:click="pathClick($index)"
+                    v-bind:class="{ 'selected': $index === activePathIndex }">
             </g>
             <!-- Render Circles -->
             <g v-for="item in circles">

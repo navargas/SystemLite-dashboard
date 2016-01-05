@@ -54,6 +54,8 @@ class ConfigManager:
                     'position': [circle['x'],circle['y']],
                     'colors': [circle['style']['inColor'], circle['style']['outColor']]
                 }
+                if 'network' in circle:
+                    nodeDetails['network'] = circle['network']
                 writeObj[circle['label']] = nodeDetails
             for path in obj['paths']:
                 if 'links' not in writeObj[path['from']]:
@@ -94,6 +96,8 @@ class ConfigManager:
                     'outColor':details['colors'][1]
                 }
             }
+            if 'network' in details:
+                obj['network'] = details['network']
             if 'links' in details and details['links'] != None:
                 for link in details['links']:
                     layout['paths'].append({

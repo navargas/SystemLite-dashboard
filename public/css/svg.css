@@ -12,6 +12,10 @@
   user-select: none;
 }
 
+.network-node {
+
+}
+
 .lineNode {
   fill: red;
   stroke: black;

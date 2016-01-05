@@ -8,6 +8,12 @@ var hud = new Vue({
       this.affirmativeCallback = callback;
       this.negativeCallback = negativeCallback;
     },
+    showNetworkNode: function(callback, negativeCallback) {
+      this.clearBox();
+      this.activePanel = 'network node';
+      this.affirmativeCallback = callback;
+      this.negativeCallback = negativeCallback;
+    },
     showNewItem: function(callback, negativeCallback) {
       this.clearBox();
       this.activePanel = 'new item';
@@ -50,6 +56,9 @@ var hud = new Vue({
         data.inColor = this.newItemPanel.previewColor;
         data.nodeName = document.getElementById('nodeNameInput').value;
         data.image = document.getElementById('imageNameInput').value;
+      } else if (this.activePanel == 'network node') {
+        data.container = document.getElementById('networkNodeContainer').value;
+        data.host = document.getElementById('networkNodeHost').value;
       }
       if (this.affirmativeCallback)
         this.affirmativeCallback(data);

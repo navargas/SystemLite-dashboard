@@ -162,6 +162,10 @@ class MessageAPI:
             "x":x, "y":y, "r":20,
             "style":{"inColor":data["inColor"],"outColor":data["outColor"]}
         }
+        if 'network' in data:
+            newNode['network'] = data['network']
+        if 'radius' in data:
+            newNode['r'] = data['radius']
         self.state["objects"][properties["tab"]]["circles"].append(newNode)
         self.synchronizeState()
         self.configManager.createNewNode(nodeName, properties)

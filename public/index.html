@@ -60,6 +60,12 @@
           <button v-on:click="affirmativeClick()">SAVE</button>
           <button v-on:click="negativeClick()">CANCEL</button>
         </template>
+        <template v-if="activePanel == 'network node'">
+          <input placeholder="Container Port" type="text" id="networkNodeContainer"></input>
+          <input placeholder="Host Port" type="text" id="networkNodeHost"></input>
+          <button v-on:click="affirmativeClick()">ACCEPT</button>
+          <button v-on:click="negativeClick()">CANCEL</button>
+        </template>
       </div>
     </div>
     <div class="log-display"
@@ -130,18 +136,34 @@
             </g>
             <!-- Render Circles -->
             <g v-for="item in circles">
+              <!-- if item is a normal node -->
               <circle v-on:mousedown="dragStart($event, $index)"
                       v-on:dblclick="doubleClickCircle($event, $index)"
                       data-type="circles"
-                      class="outerElement"
+                      class="outerElement" v-if="!item.network"
                       :cx="item.x" :cy="item.y" :r="item.r" :stroke="item.style.outColor"
                       stroke-width="1" :fill="item.style.inColor" />
+              <!-- else render as a square -->
+              <rect :x="item.x-item.r" :y="item.y-(item.r/2)" :width="item.r*2" :height="item.r"
+                    v-else class="network-node" :fill="item.style.inColor" :stroke="item.style.outColor"
+                      stroke-width="1" v-on:mousedown="dragStart($event, $index)"
+                      v-on:dblclick="doubleClickCircle($event, $index)" />
+              <!-- right connection node -->
               <rect :x="item.x+item.r" :y="item.y-2" rx="2" ry="2" width="2" height="2"
                     class="lineNode" v-on:mousedown="lineStart($event, $index)" />
+              <!-- left connection node -->
               <rect :x="item.x-item.r-2" :y="item.y-2" rx="2" ry="2" width="2" height="2"
-                    class="lineNode" v-on:mouseup="connectPath($index)" />
-              <text text-anchor="middle" :x="item.x" :y="item.y-item.r-4" fill="black" font-size="8">
+                    class="lineNode" v-on:mouseup="connectPath($index)" v-if="!item.network" />
+              <!-- label -->
+              <text text-anchor="middle" :x="item.x" :y="item.y-item.r-4" fill="black"
+                    font-size="8" v-if="!item.network">
                 {{ item.label }}
+              </text>
+              <text text-anchor="middle" :x="item.x" :y="item.y-(item.r/2)-4" fill="black"
+                    font-size="8" v-else>Network</text>
+              <text text-anchor="middle" :x="item.x" :y="item.y+2" v-if="item.network"
+                    fill="black" font-size="8" v-on:mousedown="dragStart($event, $index)">
+                {{ item.network }}
               </text>
             </g>
             <!-- Render Active Path -->
@@ -160,6 +182,9 @@
           <span v-show="showPalette">HIDE</span>
           <span v-else>SHOW</span>
           PALETTE
+        </span>
+        <span class="textbutton active" v-on:click="newNetworkNode()">
+          NEW NETWORK NODE
         </span>
         <svg width="100%" height="185" id="svgPalette">
           <g v-for="node in nodes" class="nodeButton" v-on:click="nodeClick($index)">

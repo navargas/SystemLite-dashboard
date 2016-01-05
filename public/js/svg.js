@@ -224,6 +224,24 @@ var svgControls = new Vue({
         });
       });
     },
+    newNetworkNode: function() {
+      hud.showNetworkNode(function(data) {
+        net = data.host + ':' + data.container;
+        send({
+          cmd:'create_node',
+          data: {
+            imageName: '~network',
+            network: net,
+            radius: 25,
+            inColor: 'white',
+            outColor: 'black',
+            position: [100, 100],
+            tab: svgCanvas.onTab,
+            label: 'Network'
+          }
+        });
+      });
+    },
     nodeClick: function(index) {
       if (index === 0) {
         this.newNode();

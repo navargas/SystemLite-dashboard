@@ -1,6 +1,5 @@
 var actions = {
   set_state: function(data) {
-    console.log('data',  data);
     var state = data.state;
     svgCanvas.setState(state.objects);
     svgControls.setPalette(data.palette);
@@ -12,7 +11,6 @@ var actions = {
         svgCanvas.onTab = tabs.compList.length - 1
       switchToTab(tabs.compList, svgCanvas.onTab || 0)
     }
-    logger.log('Loaded remote items');
   },
   log: function(data) {
     logger.log(data.message, data.severity, data.source);

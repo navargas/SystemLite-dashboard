@@ -37,6 +37,7 @@
           <button v-on:click="negativeClick()">CANCEL</button>
         </template>
         <template v-if="activePanel == 'palette node'">
+          <div class="image-status">{{ paletteActionPanel.imageStatus }}</div>
           <button v-on:click="affirmativeClick()">PLACE ON CANVAS</button>
           <button v-on:click="negativeClick()">MODIFY</button>
           <button v-on:click="deleteNode()">DELETE ITEM</button>

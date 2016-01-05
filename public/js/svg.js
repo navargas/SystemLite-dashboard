@@ -229,7 +229,7 @@ var svgControls = new Vue({
         return;
       }
       var target = this.nodes[index];
-      hud.showPaletteAction(index, {
+      hud.showPaletteAction(index, target.error, {
         accept: function() {
           send({
             cmd:'create_node',

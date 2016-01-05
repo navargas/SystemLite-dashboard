@@ -22,10 +22,11 @@ var hud = new Vue({
       this.negativeCallback = callbacks.cancel;
       this.deleteCallback = callbacks.deleteNode;
     },
-    showPaletteAction: function(node, callbacks) {
+    showPaletteAction: function(node, imageStatus, callbacks) {
       // actions: deleteItem, accept, modify (in negative)
       this.clearBox();
       this.activePanel = 'palette node';
+      this.paletteActionPanel.imageStatus = imageStatus;
       this.affirmativeCallback = callbacks.accept;
       this.negativeCallback = callbacks.modify;
       this.deleteCallback = callbacks.deleteItem;
@@ -38,6 +39,7 @@ var hud = new Vue({
     clearBox: function() {
       this.confirmPanel.prompt = undefined;
       this.activePanel = 'none';
+      this.paletteActionPanel.imageStatus = undefined;
       this.affirmativeCallback = undefined;
       this.negativeCallback = undefined;
       this.deleteCallback = undefined;
@@ -76,6 +78,9 @@ var hud = new Vue({
     },
     nodeSettingsPanel: {
       name: 'testing'
+    },
+    paletteActionPanel: {
+      imageStatus: undefined
     },
     affirmativeCallback: undefined,
     negativeCallback: undefined,

@@ -27,9 +27,12 @@ class DockerAPI:
         if ':' not in imageName:
             imageName += ':latest'
         lastLayer = None
-        lastTime = time.time()
+        lastTime = 0
         for line in self.client.pull(imageName, stream=True):
             obj = json.loads(line.decode(encoding='UTF-8'))
+            if 'error' in obj:
+                socket.log(obj['error'], 'alert')
+                return 'download_error'
             if time.time() - lastTime < 10:
                 continue
             lastTime = time.time()

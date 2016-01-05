@@ -82,3 +82,8 @@
   right: 40px;
   top: 20px;
 }
+
+.hud .image-status {
+  margin: 20px 0px;
+  color: red;
+}

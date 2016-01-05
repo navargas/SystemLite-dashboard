@@ -105,6 +105,23 @@ class MessageAPI:
         }
         self.palette.insert(0, newItem)
         self.synchronizeState()
+        if not self.dockerAPI.imageDownloaded(data['image']):
+            newItem['error'] = 'Image is downloading'
+            self.synchronizeState()
+            self.socket.log(
+                'Image "{0}" not found, downloading...'.format(data['image'])
+            )
+            status = self.dockerAPI.downloadImage(data['image'], self.socket)
+            if status == 'download_error':
+                newItem['fill'] = 'white'
+                newItem['detail'] = '?'
+                newItem['error'] = 'Image could not be downloaded'
+            else:
+                self.socket.log(
+                    'Image "{0}" download complete'.format(data['image'])
+                )
+                del newItem['error']
+            self.synchronizeState()
     def connect_nodes(self, data):
         self.state['objects'][data['tab']]['paths'].append({
             'from': data['from'],

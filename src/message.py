@@ -153,8 +153,8 @@ class MessageAPI:
             # Ensure that all nodes are running
             self.dockerAPI.startNodes(tab['circles'], tab['paths'])
             # Resolve linkages between nodes
-            #self.dns.resolve(tab['circles'], tab['paths'])
-        self.socket.log('Configuration saved', 'debug')
+            self.dns.resolve(tab['circles'], tab['paths'])
+        self.socket.log('Application Deployed', 'debug')
     def create_node(self, data):
         properties = {}
         properties['image'] = data["imageName"]

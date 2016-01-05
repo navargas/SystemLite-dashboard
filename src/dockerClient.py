@@ -93,43 +93,34 @@ class DockerAPI:
                 print('With network', nets[node['label']])
                 # TODO, this should be repeated for each port, not just the first
                 portsBindings = nets[node['label']][0]
+            dnsHost = ['172.17.42.1']
             self.liveContainers[node['label']] = ContainerClient(
-                self, node['image'], node['label'], portsBindings=portsBindings
+                self, node['image'], node['label'], portsBindings=portsBindings,
+                dns=dnsHost
             )
-    def run(self, nodeName):
-        properties = self.configManager.node(nodeName)
-        if properties == None:
-            sys.stderr.write('Cannot find properties for node ' + str(nodeName));
-            return False
-        if not self.imageDownloaded(properties.imageName):
-            log('INFO', 'Image <{0}> not found, downloading'.format(properties.imageName))
-            self.downloadImage(properties.imageName)
-        host_config = self.client.create_host_config(
-            port_bindings=properties.port_bindings
-        )
-        container = self.client.create_container(
-            imageName, name=nodeName, host_config=host_config, detach=True
-        )
-        self.client.start(container=container.get('Id'))
-        socket.log(str(imageName) + " started.", 'debug')
 
 class ContainerClient:
     def __init__(self, dockerAPI, image, containerName,
-                 portsBindings=None, binds=None, ports=None, command=None):
+                 portsBindings=None, binds=None, ports=None, command=None,
+                 socket=None, dns=None, env=None):
         """
         Check if image is downloaded, if not download it
         Next check if container is started, if not start it
         """
+        print('Using dns', dns)
         self.dockerAPI = dockerAPI
         self.image = image
         self.container = containerName
-        stderr = StreamSocket(sys.stderr)
+        if socket == None:
+            stderr = StreamSocket(sys.stderr)
+        else:
+            stderr = socket
         if not dockerAPI.imageDownloaded(self.image):
             stderr.log('Downloading image "{0}"'.format(self.image))
             dockerAPI.downloadImage(self.image, stderr)
         status = dockerAPI.status(self.container)
         if status == None:
-            container = self.createContainer(portsBindings, binds, ports, command)
+            container = self.createContainer(portsBindings, binds, ports, command, dns, env)
             dockerAPI.client.start(container)
             stderr.log('{0} online'.format(self.container))
         elif status == 'running':
@@ -141,17 +132,25 @@ class ContainerClient:
         else:
             stderr.log('Unrecognized status <{0}>'.format(status))
             sys.exit(1)
-    def createContainer(self, portsBindings, binds, ports, command):
+    def createContainer(self, portsBindings, binds, ports, command, dns, env):
         if binds == None:
             binds = {}
         if portsBindings == None:
             portsBindings = {}
+        if dns == None:
+            dns = []
+        print('With dns', dns)
+        if env == None:
+            env = []
+        #env.append({'SYSLITE_NAME':self.container})
+        env = ['SYSLITE_NAME='+str(self.container).lower()]
         dnsport = self.dockerAPI.client.create_host_config(
             port_bindings=portsBindings,
-            binds=binds
+            binds=binds,
+            dns=dns
         )
         container = self.dockerAPI.client.create_container(
-            detach=True, ports=ports,
+            detach=True, ports=ports, environment=env,
             name=self.container, host_config=dnsport,
             image=self.image, command=command
         ).get('Id')

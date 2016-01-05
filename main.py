@@ -25,7 +25,7 @@ class SocketHandler(tornado.websocket.WebSocketHandler):
     def check_origin(self, origin):
         return True
     def open(self):
-        self.messageAPI = message.MessageAPI(DockerAPI, configManager)
+        self.messageAPI = message.MessageAPI(DockerAPI, configManager, dns)
         log('DEBUG', 'Connection Opened')
     def on_message(self, message):
         msg = json.loads(message)

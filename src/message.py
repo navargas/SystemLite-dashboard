@@ -20,7 +20,8 @@ class RemoteSocket:
 
 
 class MessageAPI:
-    def __init__(self, dockerAPI, configManager):
+    def __init__(self, dockerAPI, configManager, dns):
+        self.dns = dns
         self.configManager = configManager
         self.socket = None
         self.dockerAPI = dockerAPI
@@ -148,6 +149,11 @@ class MessageAPI:
         self.socket.log('Changed "{0}" to "{1}"'.format(oldname, newName))
     def commit_changes(self, data):
         self.configManager.commit(self.state, self.palette, self.workspace)
+        for tab in self.state['objects']:
+            # Ensure that all nodes are running
+            self.dockerAPI.startNodes(tab['circles'], tab['paths'])
+            # Resolve linkages between nodes
+            #self.dns.resolve(tab['circles'], tab['paths'])
         self.socket.log('Configuration saved', 'debug')
     def create_node(self, data):
         properties = {}

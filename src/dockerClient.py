@@ -18,6 +18,7 @@ def mustHave(hMap, prop):
 class DockerAPI:
     def __init__(self, configManager):
         self.configManager = configManager
+        self.liveContainers = {}
         if "DOCKER_HOST" not in os.environ:
             self.client = docker.Client(base_url="unix://var/run/docker.sock")
         else:
@@ -62,6 +63,39 @@ class DockerAPI:
             return self.client.inspect_image(imageName)
         except docker.errors.NotFound as e:
             return False
+    def startNodes(self, nodes, paths):
+        """
+        @nodes - and array containing live nodes and configuration nodes (i.e. ~network)
+        @paths - and array describing associations between live nodes and config nodes
+        """
+        nets = {}
+        # find all network nodes
+        for node in nodes:
+            if 'network' in node:
+                host, container = node['network'].split(':')
+                associatedNode = None
+                for path in paths:
+                    if path['from'] == node['label']:
+                        associatedNode = path['to']
+                        break
+                if associatedNode == None:
+                    continue
+                print('Network found', host, container, associatedNode, node['label'])
+                if associatedNode not in nets: nets[associatedNode] = []
+                nets[associatedNode].append({int(container):int(host)})
+        # start containers
+        for node in nodes:
+            if 'network' in node:
+                continue
+            print('Starting {0}, w/ image {1}'.format(node['label'], node['image']))
+            portsBindings = None
+            if node['label'] in nets:
+                print('With network', nets[node['label']])
+                # TODO, this should be repeated for each port, not just the first
+                portsBindings = nets[node['label']][0]
+            self.liveContainers[node['label']] = ContainerClient(
+                self, node['image'], node['label'], portsBindings=portsBindings
+            )
     def run(self, nodeName):
         properties = self.configManager.node(nodeName)
         if properties == None:
@@ -108,6 +142,10 @@ class ContainerClient:
             stderr.log('Unrecognized status <{0}>'.format(status))
             sys.exit(1)
     def createContainer(self, portsBindings, binds, ports, command):
+        if binds == None:
+            binds = {}
+        if portsBindings == None:
+            portsBindings = {}
         dnsport = self.dockerAPI.client.create_host_config(
             port_bindings=portsBindings,
             binds=binds

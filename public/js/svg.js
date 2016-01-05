@@ -84,6 +84,7 @@ var svgCanvas = new Vue({
                 pathIndex: this.activePathIndex
               }
             });
+            this.activePathIndex = null;
           }
           break;
         case 46:

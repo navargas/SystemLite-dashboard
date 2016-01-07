@@ -30,7 +30,7 @@ class Client:
             ports=ports,
             command=command
         )
-    def resolve(self, nodes, paths):
+    def resolve(self, nodes, paths, socket):
         nodeMap = {}
         for node in nodes:
             nodeMap[node['label']] = node
@@ -60,3 +60,4 @@ class Client:
                     exec_id=execCmd,
                     detach=True
                 )
+                socket.log('DNS record created for {0} --> {1}'.format(pFrom, con))

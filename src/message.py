@@ -151,9 +151,9 @@ class MessageAPI:
         self.configManager.commit(self.state, self.palette, self.workspace)
         for tab in self.state['objects']:
             # Ensure that all nodes are running
-            self.dockerAPI.startNodes(tab['circles'], tab['paths'])
+            self.dockerAPI.startNodes(tab['circles'], tab['paths'], self.socket)
             # Resolve linkages between nodes
-            self.dns.resolve(tab['circles'], tab['paths'])
+            self.dns.resolve(tab['circles'], tab['paths'], self.socket)
         self.socket.log('Application Deployed', 'debug')
     def create_node(self, data):
         properties = {}

@@ -63,7 +63,7 @@ class DockerAPI:
             return self.client.inspect_image(imageName)
         except docker.errors.NotFound as e:
             return False
-    def startNodes(self, nodes, paths):
+    def startNodes(self, nodes, paths, socket):
         """
         @nodes - and array containing live nodes and configuration nodes (i.e. ~network)
         @paths - and array describing associations between live nodes and config nodes
@@ -80,23 +80,21 @@ class DockerAPI:
                         break
                 if associatedNode == None:
                     continue
-                print('Network found', host, container, associatedNode, node['label'])
                 if associatedNode not in nets: nets[associatedNode] = []
                 nets[associatedNode].append({int(container):int(host)})
         # start containers
         for node in nodes:
             if 'network' in node:
                 continue
-            print('Starting {0}, w/ image {1}'.format(node['label'], node['image']))
+            socket.log('Starting {0}, w/ image {1}'.format(node['label'], node['image']))
             portsBindings = None
             if node['label'] in nets:
-                print('With network', nets[node['label']])
                 # TODO, this should be repeated for each port, not just the first
                 portsBindings = nets[node['label']][0]
             dnsHost = ['172.17.42.1']
             self.liveContainers[node['label']] = ContainerClient(
                 self, node['image'], node['label'], portsBindings=portsBindings,
-                dns=dnsHost
+                dns=dnsHost, socket=socket
             )
 
 class ContainerClient:
@@ -107,7 +105,6 @@ class ContainerClient:
         Check if image is downloaded, if not download it
         Next check if container is started, if not start it
         """
-        print('Using dns', dns)
         self.dockerAPI = dockerAPI
         self.image = image
         self.container = containerName
@@ -139,7 +136,6 @@ class ContainerClient:
             portsBindings = {}
         if dns == None:
             dns = []
-        print('With dns', dns)
         if env == None:
             env = []
         #env.append({'SYSLITE_NAME':self.container})

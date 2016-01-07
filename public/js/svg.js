@@ -61,6 +61,11 @@ var svgCanvas = new Vue({
     canvasClick: function() {
       this.activePathIndex = null;
     },
+    mouseUp: function() {
+      this.onState.paths.$remove(this.mousepath);
+      this.mousepath = undefined;
+      this.paths = translatePaths(this.onState, this.mouse);
+    },
     keyPress: function(event) {
       var KeyID = event.keyCode;
       var d = event.srcElement || event.target;
@@ -203,6 +208,8 @@ var svgCanvas = new Vue({
 svgCanvas.showTab(0);
 
 document.addEventListener("keydown", svgCanvas.keyPress);
+
+document.addEventListener("mouseup", svgCanvas.mouseUp);
 
 document.addEventListener("switchTab", function(data) {
   svgCanvas.showTab(data.index);

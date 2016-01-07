@@ -88,7 +88,18 @@ var svgCanvas = new Vue({
           }
           break;
         case 46:
-          console.log("delete");
+          if (sourceTag != 'BODY') break;
+          event.preventDefault();
+          if (this.activePathIndex !== null) {
+            send({
+              cmd: 'delete_path',
+              data: {
+                tab: this.onTab,
+                pathIndex: this.activePathIndex
+              }
+            });
+            this.activePathIndex = null;
+          }
           break;
         default:
           break;

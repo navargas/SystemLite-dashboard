@@ -26,12 +26,6 @@ function constructPathProperty(start, curve1, curve2, end) {
          + end[0] + ',' + end[1]
 }
 
-function filterMousePaths(paths) {
-  return paths.filter(function(value) {
-    return value.to.mouse === undefined;
-  });
-}
-
 function translatePaths(state, mouse) {
   // take objects containing {from, to} properties
   // and construct a formatted string

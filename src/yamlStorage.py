@@ -91,6 +91,7 @@ class ConfigManager:
                 'y': details['position'][1],
                 'r': details['radius'],
                 'image': details['image'],
+                'statusColor':'grey',
                 'style': {
                     'inColor': details['colors'][0],
                     'outColor':details['colors'][1]

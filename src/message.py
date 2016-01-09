@@ -43,7 +43,10 @@ class MessageAPI:
     def on_message(self, msg, resp):
         self.socket = RemoteSocket(resp)
         if msg["cmd"] in self.commandMap:
-            self.commandMap[msg["cmd"]](msg["data"])
+            try:
+                self.commandMap[msg["cmd"]](msg["data"])
+            except Exception as e:
+                self.socket.log(str(e), severity='alert')
         else:
             self.socket.log('Malformed command "{0}"'.format(msg), 'alert')
     def synchronizeState(self, useTab=None):

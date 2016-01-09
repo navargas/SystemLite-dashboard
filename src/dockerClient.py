@@ -16,7 +16,8 @@ def mustHave(hMap, prop):
     
 
 class DockerAPI:
-    def __init__(self, configManager):
+    def __init__(self, configManager, openConnections):
+        self.openConnections = openConnections
         self.configManager = configManager
         self.liveContainers = {}
         if "DOCKER_HOST" not in os.environ:
@@ -53,6 +54,18 @@ class DockerAPI:
             return self.client.inspect_container(containerName)['State']['Status']
         except docker.errors.NotFound as e:
             return None
+    def updateContainerStatus(self):
+        containers = self.client.containers(filters={'status':'running'})
+        running = {}
+        for container in containers:
+            for name in container['Names']:
+                running[name.replace('/','')] = True
+        self.openConnections.broadcast({
+            'cmd':'update_status',
+            'data': {
+                'running':running
+            }
+        })
     def addImage(self, imageName, exposePort, nodeName, socket):
         pass
     def imageDownloaded(self, imageName):

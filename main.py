@@ -2,6 +2,8 @@
 import tornado.websocket
 import tornado.ioloop
 import tornado.web
+import datetime
+import uuid
 import json
 import sys
 import os
@@ -11,21 +13,41 @@ from src.util import log
 from src import dockerClient
 from src import ConfigManager
 
-configManager = ConfigManager()
-
-DockerAPI = dockerClient.DockerAPI(configManager)
-
-dns = dns.Client(DockerAPI)
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
         self.write("Hello, world")
+
+class OpenConnections:
+    def __init__(self):
+        self.connections = {}
+    def new(self, connection):
+        newId = str(uuid.uuid4())
+        self.connections[newId] = connection
+    def broadcast(self, jsonCompatibleObject):
+        prune = []
+        for uid, con in self.connections.items():
+            try:
+                con.messageAPI.socket.send(jsonCompatibleObject)
+            except tornado.websocket.WebSocketClosedError:
+                prune.append(uid)
+        # cleanup inactive connections
+        for uid in prune:
+            del self.connections[uid]
+
+configManager = ConfigManager()
+openConnections = OpenConnections()
+DockerAPI = dockerClient.DockerAPI(configManager, openConnections)
+dns = dns.Client(DockerAPI)
+loop = tornado.ioloop.IOLoop.instance()
+tornado.ioloop.PeriodicCallback(DockerAPI.updateContainerStatus,5000, io_loop=loop).start()
 
 class SocketHandler(tornado.websocket.WebSocketHandler):
     def check_origin(self, origin):
         return True
     def open(self):
         self.messageAPI = message.MessageAPI(DockerAPI, configManager, dns)
+        openConnections.new(self)
         log('DEBUG', 'Connection Opened')
     def on_message(self, message):
         msg = json.loads(message)

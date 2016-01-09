@@ -142,12 +142,14 @@
                       data-type="circles"
                       class="outerElement" v-if="!item.network"
                       :cx="item.x" :cy="item.y" :r="item.r" :stroke="item.style.outColor"
-                      stroke-width="1" :fill="item.style.inColor" />
+                       :fill="item.style.inColor" />
               <!-- else render as a square -->
               <rect :x="item.x-item.r" :y="item.y-(item.r/2)" :width="item.r*2" :height="item.r"
                     v-else class="network-node" :fill="item.style.inColor" :stroke="item.style.outColor"
                       stroke-width="1" v-on:mousedown="dragStart($event, $index)"
                       v-on:dblclick="doubleClickCircle($event, $index)" />
+              <circle v-if="!item.network && item.statusColor"
+                      :cx="item.x-item.r" :cy="item.y+item.r" r="3" :fill="item.statusColor" />
               <!-- right connection node -->
               <rect :x="item.x+item.r" :y="item.y-2" rx="2" ry="2" width="2" height="2"
                     class="lineNode" v-on:mousedown="lineStart($event, $index)" />

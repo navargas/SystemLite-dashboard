@@ -12,6 +12,17 @@ var actions = {
       switchToTab(tabs.compList, svgCanvas.onTab || 0)
     }
   },
+  update_status: function(data) {
+    /* Only update container status on current tab */
+    var items = svgCanvas.circles;
+    for (index in items) {
+      if (data.running[items[index].label]) {
+        items[index].statusColor = 'lightgreen';
+      } else {
+        items[index].statusColor = 'red';
+      }
+    }
+  },
   log: function(data) {
     logger.log(data.message, data.severity, data.source);
   }

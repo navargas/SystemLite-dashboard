@@ -168,6 +168,7 @@ class MessageAPI:
         newNode = {
             "label":self.getUniqueName(nodeName, data['tab']),
             "image":data['imageName'],
+            "statusColor":"grey",
             "x":x, "y":y, "r":20,
             "style":{"inColor":data["inColor"],"outColor":data["outColor"]}
         }

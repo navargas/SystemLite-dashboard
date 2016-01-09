@@ -134,14 +134,18 @@ class ContainerClient:
             dockerAPI.client.start(container)
             stderr.log('{0} online'.format(self.container))
         elif status == 'running':
-            stderr.log('{0} online'.format(self.container))
+            stderr.log('{0} already online'.format(self.container))
         elif status == 'created':
             container = dockerAPI.container(self.container)['Id']
             dockerAPI.client.start(container)
             stderr.log('{0} online'.format(self.container))
+        elif status == 'exited':
+            self.dockerAPI.client.remove_container(self.container)
+            container = self.createContainer(portsBindings, binds, ports, command, dns, env)
+            dockerAPI.client.start(container)
+            stderr.log('{0} online'.format(self.container))
         else:
             stderr.log('Unrecognized status <{0}>'.format(status))
-            sys.exit(1)
     def createContainer(self, portsBindings, binds, ports, command, dns, env):
         if binds == None:
             binds = {}

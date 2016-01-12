@@ -1,5 +1,7 @@
+import traceback
 import inspect
 import json
+import sys
 import re
 import os
 from src.util import log
@@ -46,6 +48,8 @@ class MessageAPI:
             try:
                 self.commandMap[msg["cmd"]](msg["data"])
             except Exception as e:
+                traceback.print_exc()
+                sys.stdout.write(str(e))
                 self.socket.log(str(e), severity='alert')
         else:
             self.socket.log('Malformed command "{0}"'.format(msg), 'alert')

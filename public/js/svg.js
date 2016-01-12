@@ -236,6 +236,11 @@ var svgControls = new Vue({
         });
       });
     },
+    stopAllContainers: function() {
+      send({
+        cmd: 'terminate_containers'
+      });
+    },
     newNetworkNode: function() {
       hud.showNetworkNode(function(data) {
         net = data.host + ':' + data.container;

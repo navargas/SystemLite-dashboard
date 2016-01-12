@@ -188,6 +188,9 @@
         <span class="textbutton active" v-on:click="newNetworkNode()">
           NEW NETWORK NODE
         </span>
+        <span class="textbutton active" v-on:click="stopAllContainers()">
+          DEACTIVATE ALL
+        </span>
         <svg width="100%" height="185" id="svgPalette">
           <g v-for="node in nodes" class="nodeButton" v-on:click="nodeClick($index)">
             <text text-anchor="middle" :x="85 + (150 * $index)" y="28" fill="black" font-size="20">

@@ -175,12 +175,9 @@ class MessageAPI:
             self.dns.resolve(tab['circles'], tab['paths'], self.socket)
         self.socket.log('Application Deployed', 'success')
     def create_node(self, data):
-        properties = {}
-        properties['image'] = data["imageName"]
         nodeName = data["label"]
         x = data["position"][0]
         y = data["position"][1]
-        properties["tab"] = data["tab"]
         newNode = {
             "label":self.getUniqueName(nodeName, data['tab']),
             "image":data['imageName'],
@@ -192,5 +189,5 @@ class MessageAPI:
             newNode['network'] = data['network']
         if 'radius' in data:
             newNode['r'] = data['radius']
-        self.state["objects"][properties["tab"]]["circles"].append(newNode)
+        self.state["objects"][data["tab"]]["circles"].append(newNode)
         self.synchronizeState()

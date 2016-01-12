@@ -55,7 +55,7 @@
 }
 
 .log-box {
-  overflow-y: scroll;
+  overflow-y: auto;
   position: absolute;
   right: 0px;
   bottom: 0px;

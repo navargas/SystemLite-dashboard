@@ -40,6 +40,7 @@ class MessageAPI:
             "create_new_tab": self.create_new_tab,
             "change_tab_name": self.change_tab_name,
             "commit_changes": self.commit_changes,
+            "terminate_containers": self.terminate_containers,
             "initalize_connection":self.initalize_connection
         }
     def on_message(self, msg, resp):
@@ -104,6 +105,18 @@ class MessageAPI:
     def delete_palette_item(self, data):
         del self.palette[data['index']]
         self.synchronizeState()
+    def terminate_containers(self, data):
+        sysliteInstance = '__default__'
+        if 'SYSLITE_INSTACE' in os.environ:
+            sysliteInstance = os.environ['SYSLITE_INSTACE']
+        for container in self.dockerAPI.client.containers(filters={'status':'running'}):
+            if 'Syslite_Managed_By' in container['Labels']:
+                Id = container['Id']
+                instance = container['Labels']['Syslite_Managed_By']
+                if instance == sysliteInstance:
+                    self.socket.log('Stopping container {0}...'.format(Id))
+                    self.dockerAPI.client.stop(Id)
+        self.socket.log('Environment shutdown complete')
     def new_palette_item(self, data):
         newItem = {
             'name': data['nodeName'],

@@ -76,7 +76,7 @@ class DockerAPI:
             return self.client.inspect_image(imageName)
         except docker.errors.NotFound as e:
             return False
-    def startNodes(self, nodes, paths, socket):
+    def startNodes(self, nodes, paths, tabIndex, socket):
         """
         @nodes - and array containing live nodes and configuration nodes (i.e. ~network)
         @paths - and array describing associations between live nodes and config nodes
@@ -107,19 +107,36 @@ class DockerAPI:
             dnsHost = ['172.17.42.1']
             self.liveContainers[node['label']] = ContainerClient(
                 self, node['image'], node['label'], portsBindings=portsBindings,
-                dns=dnsHost, socket=socket
+                dns=dnsHost, socket=socket, tab=tabIndex
             )
+        # stop old containers managed by this instance
+        runningContainers = {node['label']:True for node in nodes}
+        sysliteInstance = '__default__'
+        if 'SYSLITE_INSTACE' in os.environ:
+            sysliteInstance = os.environ['SYSLITE_INSTACE']
+        for container in self.client.containers(filters={'status':'running'}):
+            if 'Syslite_Managed_By' in container['Labels'] and \
+               'Syslite_Name' in container['Labels'] and \
+               'Syslite_Tab' in container['Labels']:
+                name = container['Labels']['Syslite_Name']
+                tab = container['Labels']['Syslite_Tab']
+                instance = container['Labels']['Syslite_Managed_By']
+                if instance == sysliteInstance and tab == str(tabIndex):
+                    if name not in runningContainers:
+                        socket.log('Stopping stale container: {0}'.format(name))
+                        self.client.stop(name)
 
 class ContainerClient:
     def __init__(self, dockerAPI, image, containerName,
                  portsBindings=None, binds=None, ports=None, command=None,
-                 socket=None, dns=None, env=None):
+                 socket=None, dns=None, env=None, tab=-1):
         """
         Check if image is downloaded, if not download it
         Next check if container is started, if not start it
         """
         self.dockerAPI = dockerAPI
         self.image = image
+        self.tab = tab
         self.container = containerName
         if socket == None:
             stderr = StreamSocket(sys.stderr)
@@ -155,7 +172,9 @@ class ContainerClient:
             dns = []
         if env == None:
             env = []
-        #env.append({'SYSLITE_NAME':self.container})
+        sysliteInstance = '__default__'
+        if 'SYSLITE_INSTACE' in os.environ:
+            sysliteInstance = os.environ['SYSLITE_INSTACE']
         env = ['SYSLITE_NAME='+str(self.container).lower()]
         dnsport = self.dockerAPI.client.create_host_config(
             port_bindings=portsBindings,
@@ -165,6 +184,10 @@ class ContainerClient:
         container = self.dockerAPI.client.create_container(
             detach=True, ports=ports, environment=env,
             name=self.container, host_config=dnsport,
-            image=self.image, command=command
+            image=self.image, command=command, labels={
+                "Syslite_Managed_By":sysliteInstance,
+                "Syslite_Name":self.container,
+                "Syslite_Tab":str(self.tab)
+            }
         ).get('Id')
         return container

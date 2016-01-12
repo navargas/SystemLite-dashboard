@@ -156,9 +156,9 @@ class MessageAPI:
         self.socket.log('Changed "{0}" to "{1}"'.format(oldname, newName))
     def commit_changes(self, data):
         self.configManager.commit(self.state, self.palette, self.workspace)
-        for tab in self.state['objects']:
+        for index, tab in enumerate(self.state['objects']):
             # Ensure that all nodes are running
-            self.dockerAPI.startNodes(tab['circles'], tab['paths'], self.socket)
+            self.dockerAPI.startNodes(tab['circles'], tab['paths'], index, self.socket)
             # Resolve linkages between nodes
             self.dns.resolve(tab['circles'], tab['paths'], self.socket)
         self.socket.log('Application Deployed', 'debug')

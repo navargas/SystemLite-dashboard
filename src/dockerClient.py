@@ -175,7 +175,7 @@ class ContainerClient:
         sysliteInstance = '__default__'
         if 'SYSLITE_INSTACE' in os.environ:
             sysliteInstance = os.environ['SYSLITE_INSTACE']
-        env = ['SYSLITE_NAME='+str(self.container).lower()]
+        env.append('SYSLITE_NAME='+str(self.container).lower())
         dnsport = self.dockerAPI.client.create_host_config(
             port_bindings=portsBindings,
             binds=binds,

@@ -3,6 +3,7 @@ import json
 import time
 import sys
 import os
+from src import util
 from src.util import log
 from src import ConfigManager
 from src.util import StreamSocket
@@ -172,9 +173,7 @@ class ContainerClient:
             dns = []
         if env == None:
             env = []
-        sysliteInstance = '__default__'
-        if 'SYSLITE_INSTACE' in os.environ:
-            sysliteInstance = os.environ['SYSLITE_INSTACE']
+        sysliteInstance = util.getInstanceName()
         env.append('SYSLITE_NAME='+str(self.container).lower())
         dnsport = self.dockerAPI.client.create_host_config(
             port_bindings=portsBindings,

@@ -4,6 +4,7 @@ import json
 import sys
 import re
 import os
+from src import util
 from src.util import log
 from src import dockerClient
 
@@ -106,9 +107,7 @@ class MessageAPI:
         del self.palette[data['index']]
         self.synchronizeState()
     def terminate_containers(self, data):
-        sysliteInstance = '__default__'
-        if 'SYSLITE_INSTACE' in os.environ:
-            sysliteInstance = os.environ['SYSLITE_INSTACE']
+        sysliteInstance = util.getInstanceName()
         for container in self.dockerAPI.client.containers(filters={'status':'running'}):
             if 'Syslite_Managed_By' in container['Labels']:
                 Id = container['Id']

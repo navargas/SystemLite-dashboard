@@ -10,6 +10,12 @@ def log(level, *elements):
     if LEVELS.index(level) <= LOG_LEVEL:
         print(*elements)
 
+def getInstanceName():
+    sysliteInstance = '__default__'
+    if 'SYSLITE_INSTACE' in os.environ:
+        sysliteInstance = os.environ['SYSLITE_INSTACE']
+    return sysliteInstance
+
 class NullSocket:
     def send(self, jsonCompatibleObject):
         pass

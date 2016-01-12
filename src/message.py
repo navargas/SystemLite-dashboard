@@ -153,7 +153,7 @@ class MessageAPI:
         self.state = self.configManager.getState(self.workspace)
         self.palette = self.configManager.getPalette(self.workspace)
         self.synchronizeState(useTab=0)
-        self.socket.log("Hello World!", "debug");
+        self.socket.log("Hello World!", "success");
     def create_new_tab(self, data):
         tabName = data['name']
         self.state['tabs'].append({'name':tabName, 'selected':False})
@@ -173,7 +173,7 @@ class MessageAPI:
             self.dockerAPI.startNodes(tab['circles'], tab['paths'], index, self.socket)
             # Resolve linkages between nodes
             self.dns.resolve(tab['circles'], tab['paths'], self.socket)
-        self.socket.log('Application Deployed', 'debug')
+        self.socket.log('Application Deployed', 'success')
     def create_node(self, data):
         properties = {}
         properties['image'] = data["imageName"]

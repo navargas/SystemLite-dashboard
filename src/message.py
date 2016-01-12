@@ -194,4 +194,3 @@ class MessageAPI:
             newNode['r'] = data['radius']
         self.state["objects"][properties["tab"]]["circles"].append(newNode)
         self.synchronizeState()
-        self.configManager.createNewNode(nodeName, properties)

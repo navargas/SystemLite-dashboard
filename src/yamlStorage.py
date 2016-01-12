@@ -151,8 +151,3 @@ class ConfigManager:
         Modify node if it exists, otherwise throw an exception
         """
         pass
-    def createNewNode(self, nodeName, properties):
-        """
-        Create node if it does not exist, otherwise throw an exception
-        """
-        log('INFO', 'Creating new node {0}'.format(nodeName))

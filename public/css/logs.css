@@ -35,6 +35,7 @@
   box-shadow: 2px 2px 1px rgba(0, 0, 0, 0.32);
   margin-right: 0.6em;
   padding: 4px;
+  overflow-wrap: break-word;
 }
 .log-item.warn {
   background-color:rgba(255, 255, 0, 0.12);

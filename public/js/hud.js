@@ -59,6 +59,8 @@ var hud = new Vue({
       } else if (this.activePanel == 'network node') {
         data.container = document.getElementById('networkNodeContainer').value;
         data.host = document.getElementById('networkNodeHost').value;
+      } else if (this.activePanel == 'node settings') {
+        data.newName = this.nodeSettingsPanel.name;
       }
       if (this.affirmativeCallback)
         this.affirmativeCallback(data);

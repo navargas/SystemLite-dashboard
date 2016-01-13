@@ -30,7 +30,7 @@
           <input placeholder="Node Name"
                  type="text"
                  id="nodeNameInput"
-                 value="{{ nodeSettingsPanel.name }}">
+                 v-model="nodeSettingsPanel.name">
           </input>
           <button v-on:click="deleteNode()">DELETE NODE</button>
           <button v-on:click="affirmativeClick()">SAVE</button>

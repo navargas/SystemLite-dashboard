@@ -169,8 +169,16 @@ var svgCanvas = new Vue({
       var nodeName = this.circles[index].label;
       var onTab = this.onTab;
       hud.showNodeSettings(this.circles[index], {
-        accept: function() {
-
+        accept: function(data) {
+          console.log('New name:', data.newName);
+          send({
+            cmd: 'change_node_name',
+            data: {
+              node: nodeName,
+              newName: data.newName,
+              tab: onTab
+            }
+          });
         },
         cancel: function() {
 

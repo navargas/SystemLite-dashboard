@@ -41,6 +41,7 @@ class MessageAPI:
             "create_new_tab": self.create_new_tab,
             "change_tab_name": self.change_tab_name,
             "commit_changes": self.commit_changes,
+            "change_node_name":self.change_node_name,
             "terminate_containers": self.terminate_containers,
             "initalize_connection":self.initalize_connection
         }
@@ -103,6 +104,10 @@ class MessageAPI:
         node = self.nodeByLabel(data['tab'], data['nodeName'])
         node['x'] = data['x']
         node['y'] = data['y']
+    def change_node_name(self, data):
+        node = self.nodeByLabel(data['tab'], data['node'])
+        node['label'] = data['newName']
+        self.synchronizeState()
     def delete_palette_item(self, data):
         del self.palette[data['index']]
         self.synchronizeState()

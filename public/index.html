@@ -33,6 +33,7 @@
                  v-model="nodeSettingsPanel.name">
           </input>
           <button v-on:click="deleteNode()">DELETE NODE</button>
+          <button v-on:click="callCallback('suspendNode')">SUSPEND</button>
           <button v-on:click="affirmativeClick()">SAVE</button>
           <button v-on:click="negativeClick()">CANCEL</button>
         </template>

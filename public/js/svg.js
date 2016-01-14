@@ -180,6 +180,18 @@ var svgCanvas = new Vue({
             }
           });
         },
+        suspendNode: function() {
+          var message = 'Are you sure you wish to suspend ' + nodeName + '?';
+          hud.showConfirm(message, function() {
+            send({
+              cmd: 'suspend_node',
+              data: {
+                tab: onTab,
+                index: index
+              }
+            });
+          });
+        },
         cancel: function() {
 
         },

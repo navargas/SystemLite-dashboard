@@ -40,6 +40,7 @@ class MessageAPI:
             "connect_nodes": self.connect_nodes,
             "create_new_tab": self.create_new_tab,
             "change_tab_name": self.change_tab_name,
+            "suspend_node": self.suspend_node,
             "commit_changes": self.commit_changes,
             "change_node_name":self.change_node_name,
             "terminate_containers": self.terminate_containers,
@@ -87,6 +88,11 @@ class MessageAPI:
                 nextNumber = int(reg.group(2)) + 1
                 nodeName = prefix + str(nextNumber)
         return nodeName
+    def suspend_node(self, data):
+        target = self.state['objects'][data['tab']]['circles'][data['index']]
+        self.socket.log('Stopping {0}'.format(target['label']))
+        self.dockerAPI.client.stop(target['label'])
+        pass
     def delete_node(self, data):
         target = self.state['objects'][data['tab']]['circles'][data['index']]
         self.prunePaths(data['tab'], target['label'])

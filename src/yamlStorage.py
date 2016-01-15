@@ -40,9 +40,20 @@ class ConfigManager:
         if not os.path.exists(self.configDir):
             log('INFO', 'Directory {0} not found. Creating...'.format(self.configDir))
             os.mkdir(self.configDir)
+    def pruneTabDirectories(self, workspace):
+        with open(os.path.join(workspace, 'order.yml'), 'r') as stream:
+            order = yaml.load(stream)['order']
+        for entry in os.listdir(workspace):
+            fullPath = os.path.join(workspace, entry)
+            if os.path.isfile(fullPath):
+                continue
+            if entry not in order:
+                log('DEBUG', 'removing', fullPath)
+                shutil.rmtree(fullPath)
     def commit(self, stateObject, palette, workspaceName):
         """Write stateObject to layout.yml files"""
         order = []
+        writtenTabs = []
         workspace = os.path.join(self.configDir, workspaceName)
         for objectIndex, obj in enumerate(stateObject["objects"]):
             writeObj = {}
@@ -69,12 +80,14 @@ class ConfigManager:
             layoutFile = os.path.join(tabDir, 'layout.yml')
             with open(layoutFile, 'w') as stream:
                 yaml.dump(writeObj, stream)
+            writtenTabs.append(tabName)
         orderFile = os.path.join(workspace, 'order.yml')
         with open(orderFile, 'w') as stream:
             yaml.dump({"order":order}, stream)
         paletteFile = os.path.join(workspace, 'palette.yml')
         with open(paletteFile, 'w') as stream:
             yaml.dump(palette, stream)
+        self.pruneTabDirectories(workspace)
     def buildTabState(self, workspaceName):
         """Read layout.yml file and construct an object"""
         layout = {"circles": [], "paths": []}

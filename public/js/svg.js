@@ -38,6 +38,10 @@ function translatePaths(state, mouse) {
       var to = itemByLabel(state.circles, state.paths[path].to);
     }
     var from = itemByLabel(state.circles, state.paths[path].from);
+    if (!from || !to) {
+      console.warn(state.paths[path].from, state.paths[path].to, 'path unfound');
+      continue;
+    }
     var start = [from.x + from.r, from.y-1];
     var curve1 = [start[0] + bezierGap, start[1]];
     var end = [to.x - to.r, to.y-1];

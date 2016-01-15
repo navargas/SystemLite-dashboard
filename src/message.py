@@ -112,7 +112,13 @@ class MessageAPI:
         node['y'] = data['y']
     def change_node_name(self, data):
         node = self.nodeByLabel(data['tab'], data['node'])
+        oldName = data['node']
         node['label'] = data['newName']
+        for path in self.state['objects'][data['tab']]['paths']:
+            if path['from'] == oldName:
+                path['from'] = data['newName']
+            elif path['to'] == oldName:
+                path['to'] = data['newName']
         self.synchronizeState()
     def delete_palette_item(self, data):
         del self.palette[data['index']]

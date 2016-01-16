@@ -147,7 +147,7 @@
               <!-- else render as a square -->
               <rect :x="item.x-item.r" :y="item.y-(item.r/2)" :width="item.r*2" :height="item.r"
                     v-else class="network-node" :fill="item.style.inColor" :stroke="item.style.outColor"
-                      stroke-width="1" v-on:mousedown="dragStart($event, $index)"
+                      stroke-width="1" v-on:mousedown="dragStart($event, $index)" class="outerElement"
                       v-on:dblclick="doubleClickCircle($event, $index)" />
               <circle v-if="!item.network && item.statusColor"
                       :cx="item.x-item.r" :cy="item.y+item.r" r="3" :fill="item.statusColor" />
@@ -164,7 +164,7 @@
               </text>
               <text text-anchor="middle" :x="item.x" :y="item.y-(item.r/2)-4" fill="black"
                     font-size="8" v-else>Network</text>
-              <text text-anchor="middle" :x="item.x" :y="item.y+2" v-if="item.network"
+              <text text-anchor="middle" :x="item.x" :y="item.y+2" v-if="item.network" class="network-node"
                     fill="black" font-size="8" v-on:mousedown="dragStart($event, $index)">
                 {{ item.network }}
               </text>

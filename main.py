@@ -29,7 +29,11 @@ class OpenConnections:
         for uid, con in self.connections.items():
             try:
                 con.messageAPI.socket.send(jsonCompatibleObject)
-            except tornado.websocket.WebSocketClosedError:
+            except Exception as e:
+                try:
+                    con.messageAPI.socket.ws.close()
+                except Exception as e:
+                    print(e)
                 prune.append(uid)
         # cleanup inactive connections
         for uid in prune:

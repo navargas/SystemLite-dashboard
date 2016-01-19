@@ -105,7 +105,7 @@ class DockerAPI:
             if node['label'] in nets:
                 # TODO, this should be repeated for each port, not just the first
                 portsBindings = nets[node['label']][0]
-            dnsHost = ['172.17.42.1']
+            dnsHost = [util.getNetAddr()]
             self.liveContainers[node['label']] = ContainerClient(
                 self, node['image'], node['label'], portsBindings=portsBindings,
                 dns=dnsHost, socket=socket, tab=tabIndex

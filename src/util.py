@@ -6,6 +6,12 @@ LOG_LEVEL = LEVELS.index('INFO')
 if 'LOG_LEVEL' in os.environ:
     LOG_LEVEL = LEVELS.index(os.environ['LOG_LEVEL'])
 
+def getNetAddr():
+    ip = '172.17.42.1'
+    if 'SYSLITE_DNS_NET' in os.environ:
+        ip = os.environ['SYSLITE_DNS_NET']
+    return ip
+
 def log(level, *elements):
     if LEVELS.index(level) <= LOG_LEVEL:
         print(*elements)

@@ -208,6 +208,9 @@ class MessageAPI:
                 self.socket.log('Invalid network node configuration', severity='alert')
                 return
             ports = data['network'].split(':')
+            if len(ports) != 2:
+                self.socket.log('Invalid network node configuration', severity='alert')
+                return
             for p in ports:
                 try:
                     t = int(p)

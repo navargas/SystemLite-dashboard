@@ -204,6 +204,16 @@ class MessageAPI:
         }
         if 'network' in data:
             newNode['network'] = data['network']
+            if ':' not in data['network']:
+                self.socket.log('Invalid network node configuration', severity='alert')
+                return
+            ports = data['network'].split(':')
+            for p in ports:
+                try:
+                    t = int(p)
+                except:
+                    self.socket.log('Invalid network node configuration', severity='alert')
+                    return
         if 'radius' in data:
             newNode['r'] = data['radius']
         self.state["objects"][data["tab"]]["circles"].append(newNode)

@@ -314,7 +314,13 @@ var svgControls = new Vue({
           });
         },
         modify: function() {
-
+          hud.showNewItem(function(data) {
+            data.index = index;
+            send({
+              cmd: 'edit_palette_item',
+              data: data
+            });
+          }, target);
         }
       });
     },

@@ -14,11 +14,19 @@ var hud = new Vue({
       this.affirmativeCallback = callback;
       this.negativeCallback = negativeCallback;
     },
-    showNewItem: function(callback, negativeCallback) {
+    showNewItem: function(callback, prefill) {
       this.clearBox();
       this.activePanel = 'new item';
       this.affirmativeCallback = callback;
-      this.negativeCallback = negativeCallback;
+      if (prefill) {
+        this.newItemPanel.previewColor = prefill.fill;
+        this.newItemPanel.imageName = prefill.image;
+        this.newItemPanel.nodeName = prefill.name;
+      } else {
+        this.newItemPanel.previewColor = '#AA0000';
+        this.newItemPanel.imageName = '';
+        this.newItemPanel.nodeName = '';
+      }
     },
     showNodeSettings: function(node, callbacks) {
       this.clearBox();
@@ -61,8 +69,8 @@ var hud = new Vue({
       data = {};
       if (this.activePanel == 'new item') {
         data.inColor = this.newItemPanel.previewColor;
-        data.nodeName = document.getElementById('nodeNameInput').value;
-        data.image = document.getElementById('imageNameInput').value;
+        data.nodeName = this.newItemPanel.nodeName;
+        data.image = this.newItemPanel.imageName;
       } else if (this.activePanel == 'network node') {
         data.container = document.getElementById('networkNodeContainer').value;
         data.host = document.getElementById('networkNodeHost').value;
@@ -78,9 +86,9 @@ var hud = new Vue({
     },
     negativeClick: function() {
       data = {};
-      if (this.negativeCallback)
-        this.negativeCallback(data);
+      var cb = this.negativeCallback;
       hud.clearBox();
+      if (cb) cb(data);
     },
     closeBox: function() {
       this.activePanel = 'none';
@@ -92,7 +100,9 @@ var hud = new Vue({
       prompt: undefined
     },
     newItemPanel: {
-      previewColor: '#AA0000'
+      previewColor: '#AA0000',
+      imageName: '',
+      nodeName: ''
     },
     nodeSettingsPanel: {
       name: 'testing'

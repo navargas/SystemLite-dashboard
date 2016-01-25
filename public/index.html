@@ -48,12 +48,14 @@
             <circle cx="70" cy="70" r="60" stroke="black"
                     stroke-width="2" :fill="newItemPanel.previewColor" />
           </svg>
-          <input placeholder="Node Name" type="text" id="nodeNameInput"></input>
-          <input placeholder="Docker Image" type="text" id="imageNameInput"></input>
+          <input placeholder="Node Name" type="text"
+                 v-model="newItemPanel.nodeName" id="nodeNameInput"></input>
+          <input placeholder="Docker Image" type="text"
+                 v-model="newItemPanel.imageName" id="imageNameInput"></input>
           <div class="input-group">
             <span>Color:</span>
             <input type="color"
-                   value="#AA0000"
+                   :value="newItemPanel.previewColor"
                    id="colorInput"
                    v-on:change="colorChange($event)">
             </input>

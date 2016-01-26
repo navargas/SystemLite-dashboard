@@ -314,8 +314,10 @@ var svgControls = new Vue({
           });
         },
         modify: function() {
+          // offset one to account for fake item 0
+          var idx = index - 1;
           hud.showNewItem(function(data) {
-            data.index = index;
+            data.index = idx;
             send({
               cmd: 'edit_palette_item',
               data: data

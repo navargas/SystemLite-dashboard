@@ -32,6 +32,7 @@ class MessageAPI:
         self.commandMap = {
             "create_node": self.create_node,
             "new_palette_item": self.new_palette_item,
+            "edit_palette_item": self.edit_palette_item,
             "delete_palette_item": self.delete_palette_item,
             "delete_tab": self.delete_tab,
             "delete_path": self.delete_path,
@@ -133,6 +134,10 @@ class MessageAPI:
                     self.socket.log('Stopping container {0}...'.format(Id))
                     self.dockerAPI.client.stop(Id)
         self.socket.log('Environment shutdown complete')
+    def edit_palette_item(self, data):
+        if 'index' not in data or data['index'] < 0 or data['index'] >= len(self.palette):
+            self.socket.log('Edit palette item index missing or out of range', severity='alert')
+        self.new_palette_item(data)
     def new_palette_item(self, data):
         newItem = {
             'name': data['nodeName'],
@@ -140,7 +145,12 @@ class MessageAPI:
             'fill': data['inColor'],
             'strokeColor': 'black'
         }
-        self.palette.insert(0, newItem)
+        if 'index' in data:
+            # overwrite palette item
+            self.palette[data['index']] = newItem
+        else:
+            # push new palette item to front
+            self.palette.insert(0, newItem)
         self.synchronizeState()
         if not self.dockerAPI.imageDownloaded(data['image']):
             newItem['error'] = 'Image is downloading'

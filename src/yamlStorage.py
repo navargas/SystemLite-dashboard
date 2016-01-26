@@ -13,19 +13,19 @@ class ConfigManager:
     Configuration stored in yaml files to facilitate tracking of changes.
 
     Layout:
-    nodes/
-        workspaces1/            # workspaces are created for each session
-            order.yml           # file containing the order of the tabs
-            tab1/               # Each tab contains a description of 
-                layout.yml      # File describing the layout of the system
-            tab2/               # Second tab
-                layout.yml      # Layout for second tab
-            runnable/           # Live workspaces contain files required for running
-                machine1/       # for each machine
-        workspaces2/            # second workspace
-            order.yml           # file containing the order of the tabs
-            tab1/               # Each tab contains a description of 
-                layout.yml      # File describing the layout of the system
+        nodes/                         Main Config Directory
+        ├── Example                    Workspace Name
+        │   ├── Graph_Microservice     Tab Name
+        │   │   └── layout.yml         Layout Data
+        │   ├── User_Modeling          Workspace Name
+        │   │   └── layout.yml         Layout Data
+        │   ├── order.yml              Tab Order
+        │   └── palette.yml            Palette Data
+        └── Production
+            ├── New_Tab3
+            │   └── layout.yml
+            ├── order.yml
+            └── palette.yml
     """
     def __init__(self, configDir=None):
         if configDir == None:

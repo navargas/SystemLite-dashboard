@@ -143,6 +143,7 @@ class MessageAPI:
             'name': data['nodeName'],
             'image': data['image'],
             'fill': data['inColor'],
+            'env': data['env'],
             'strokeColor': 'black'
         }
         if 'index' in data:

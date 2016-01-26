@@ -60,6 +60,15 @@
                    v-on:change="colorChange($event)">
             </input>
           </div>
+          <div class="input-group">
+            <div>Environment:</div>
+            <div class="keyvaluepair" v-for="keyval in newItemPanel.env">
+              <input placeholder="Key" type="text" v-model="keyval[0]"></input>
+              <input placeholder="Value" type="text" v-model="keyval[1]"></input>
+              <span v-on:click="deleteKeypair($index)">&#x2715;</span> 
+            </div>
+            <span v-on:click="newKeypair()" class="new-variable">&#x2795;</span>
+          </div>
           <button v-on:click="affirmativeClick()">SAVE</button>
           <button v-on:click="negativeClick()">CANCEL</button>
         </template>

@@ -22,10 +22,12 @@ var hud = new Vue({
         this.newItemPanel.previewColor = prefill.fill;
         this.newItemPanel.imageName = prefill.image;
         this.newItemPanel.nodeName = prefill.name;
+        this.newItemPanel.env = prefill.env || [];
       } else {
         this.newItemPanel.previewColor = '#AA0000';
         this.newItemPanel.imageName = '';
         this.newItemPanel.nodeName = '';
+        this.newItemPanel.env = [];
       }
     },
     showNodeSettings: function(node, callbacks) {
@@ -71,6 +73,7 @@ var hud = new Vue({
         data.inColor = this.newItemPanel.previewColor;
         data.nodeName = this.newItemPanel.nodeName;
         data.image = this.newItemPanel.imageName;
+        data.env = this.newItemPanel.env;
       } else if (this.activePanel == 'network node') {
         data.container = document.getElementById('networkNodeContainer').value;
         data.host = document.getElementById('networkNodeHost').value;
@@ -90,6 +93,12 @@ var hud = new Vue({
       hud.clearBox();
       if (cb) cb(data);
     },
+    newKeypair: function(index) {
+      this.newItemPanel.env.push(['', '']);
+    },
+    deleteKeypair: function(index) {
+      this.newItemPanel.env.$remove(this.newItemPanel.env[index]);
+    },
     closeBox: function() {
       this.activePanel = 'none';
     }
@@ -100,6 +109,7 @@ var hud = new Vue({
       prompt: undefined
     },
     newItemPanel: {
+      env: [],
       previewColor: '#AA0000',
       imageName: '',
       nodeName: ''

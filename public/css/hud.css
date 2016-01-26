@@ -11,6 +11,7 @@
   margin: auto;
   left: 50%;
   margin-left: -250px;
+  z-index: 10;
 }
 
 .hud.hidden {
@@ -48,6 +49,12 @@
   padding: 0px 12px 0px 12px;
 }
 
+.hud .new-variable {
+  font-size: 23px;
+  display: block;
+  padding-top: 10px;
+}
+
 .hud button {
   border: solid 2px #333;
   background-color: #fff;
@@ -65,6 +72,12 @@
   border: none;
   border-bottom: solid 2px #333;
   transition: border 0.3s;
+}
+
+.hud .keyvaluepair input[type="text"] {
+  display: inline;
+  width: 38%;
+  margin: 0px 10px 0px 0px;
 }
 
 .hud .input-group {

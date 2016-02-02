@@ -299,6 +299,7 @@ var svgControls = new Vue({
               outColor: target.strokeColor,
               position: [100, 100],
               tab: svgCanvas.onTab,
+              env: target.env,
               label: target.name
             }
           });

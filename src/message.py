@@ -206,9 +206,11 @@ class MessageAPI:
         nodeName = data["label"]
         x = data["position"][0]
         y = data["position"][1]
+        env = data["env"] if "env" in data else []
         newNode = {
             "label":self.getUniqueName(nodeName, data['tab']),
             "image":data['imageName'],
+            "env":env,
             "statusColor":"grey",
             "x":x, "y":y, "r":20,
             "style":{"inColor":data["inColor"],"outColor":data["outColor"]}

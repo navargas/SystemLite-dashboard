@@ -113,10 +113,10 @@ var svgCanvas = new Vue({
                       .getElementById('svgCanvas')
                       .getBoundingClientRect()
                       .top;
-      var dx = event.x/this.scaleFactor - this.mouse.x;
-      var dy = event.y/this.scaleFactor - this.mouse.y - topOffset/this.scaleFactor;
-      this.mouse.x = event.x/this.scaleFactor;
-      this.mouse.y = event.y/this.scaleFactor - topOffset/this.scaleFactor;
+      var dx = event.clientX/this.scaleFactor - this.mouse.x;
+      var dy = event.clientY/this.scaleFactor - this.mouse.y - topOffset/this.scaleFactor;
+      this.mouse.x = event.clientX/this.scaleFactor;
+      this.mouse.y = event.clientY/this.scaleFactor - topOffset/this.scaleFactor;
       if (this.currentTarget !== undefined) {
         this.currentTarget.x += dx;
         this.currentTarget.y += dy;
